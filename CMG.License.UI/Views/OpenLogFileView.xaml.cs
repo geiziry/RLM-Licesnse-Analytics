@@ -1,4 +1,4 @@
-﻿namespace CMG.License.Analytics.Views
+﻿namespace CMG.License.UI.Views
 {
     public partial class OpenLogFileView
     {

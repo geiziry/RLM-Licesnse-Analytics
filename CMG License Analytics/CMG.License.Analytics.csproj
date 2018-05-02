@@ -79,10 +79,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BootStrapper.cs" />
-    <Compile Include="ViewModels\OpenLogFileViewModel.cs" />
-    <Compile Include="Views\OpenLogFileView.xaml.cs">
-      <DependentUpon>OpenLogFileView.xaml</DependentUpon>
-    </Compile>
     <Page Include="Shell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -95,10 +91,6 @@
       <DependentUpon>Shell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\OpenLogFileView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -131,6 +123,10 @@
     <ProjectReference Include="..\CMG.License.Shared\CMG.License.Shared.csproj">
       <Project>{9570c300-5fcd-4e43-9a9c-eef6e12ba8b4}</Project>
       <Name>CMG.License.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CMG.License.UI\CMG.License.UI.csproj">
+      <Project>{9821cf65-ddc8-4b81-b68e-e64adef73b71}</Project>
+      <Name>CMG.License.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

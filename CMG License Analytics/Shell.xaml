@@ -9,6 +9,6 @@
         xmlns:regions="clr-namespace:CMG.License.Shared.PrismHelpers;assembly=CMG.License.Shared">
     <Grid>
         <ContentControl 
-            prism:RegionManager.RegionName="{Binding BindingGroupName, Source={x:Static regions:PrismRegions.MainRegion}}" />
+            prism:RegionManager.RegionName="{Binding Name, Source={x:Static regions:PrismRegions.MainRegion}}" />
     </Grid>
 </Window>

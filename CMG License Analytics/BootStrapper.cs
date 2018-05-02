@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using Autofac;
+using CMG.License.UI;
 using Prism.Autofac;
+using Prism.Modularity;
 
 namespace CMG.License.Analytics
 {
@@ -9,6 +11,7 @@ namespace CMG.License.Analytics
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
         {
 
+            builder.RegisterModule<UiModuleRegistery>();
             base.ConfigureContainerBuilder(builder);
         }
 
@@ -24,6 +27,17 @@ namespace CMG.License.Analytics
             Application.Current.MainWindow.Show();
         }
 
-
+        protected override void ConfigureModuleCatalog()
+        {
+            var uiModule = typeof(UI.UiModule);
+            ModuleCatalog.AddModule(
+                new ModuleInfo
+                {
+                    ModuleName = "uiModule",
+                    ModuleType = uiModule.AssemblyQualifiedName,
+                    InitializationMode = InitializationMode.WhenAvailable
+                });
+            base.ConfigureModuleCatalog();
+        }
     }
 }

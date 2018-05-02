@@ -1,7 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 
-namespace CMG.License.Analytics.ViewModels
+namespace CMG.License.UI.ViewModels
 {
     public class OpenLogFileViewModel : BindableBase
     {
