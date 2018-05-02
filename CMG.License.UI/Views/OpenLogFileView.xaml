@@ -8,14 +8,19 @@
       xmlns:prism="http://prismlibrary.com/"
       prism:ViewModelLocator.AutoWireViewModel="True">
     <DockPanel LastChildFill="True">
-        <GroupBox DockPanel.Dock="Top" Header="CMG Log File" Height="100" Margin="10">
-            <StackPanel Orientation="Horizontal">
-                <Button 
-                    Content="Browse" 
-                    HorizontalAlignment="Left" 
-                    Margin="10,0,0,0" 
-                    Height="20" 
-                    Command="{Binding GetLogFilePathCmd}"/>
+        <GroupBox DockPanel.Dock="Top" Header="CMG Log File"  Margin="10">
+            <StackPanel  Margin="5,10,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <Button
+                    Content="Browse"
+                    HorizontalAlignment="Left"
+                    Command="{Binding GetLogFilePathCmd}" />
+                    <Button
+                    Margin="10,0,0,0"
+                    Content="Generate Report"
+                    HorizontalAlignment="Left"
+                    Command="{Binding GenerateReportCmd}" />
+                </StackPanel>
                 <TextBlock Text="{Binding LogFilePath}" />
             </StackPanel>
         </GroupBox>

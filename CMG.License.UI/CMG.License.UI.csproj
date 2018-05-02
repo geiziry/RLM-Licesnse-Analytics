@@ -96,6 +96,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CMG.License.Services\CMG.License.Services.csproj">
+      <Project>{4d2c7f87-0c5a-48cc-8e10-f49a0f0a76b5}</Project>
+      <Name>CMG.License.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CMG.License.Shared\CMG.License.Shared.csproj">
       <Project>{9570c300-5fcd-4e43-9a9c-eef6e12ba8b4}</Project>
       <Name>CMG.License.Shared</Name>
