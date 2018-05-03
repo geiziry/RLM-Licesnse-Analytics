@@ -13,8 +13,10 @@ namespace CMG.License.Analytics
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
         {
             builder.RegisterModule<UiModuleRegistery>();
-            var LogFilesParsingService = new LogFilesParsingService();
-            builder.RegisterInstance(LogFilesParsingService).As<ILogFilesParsingService>();
+            var logFilesParsingService = new LogFilesParsingService();
+            builder.RegisterInstance(logFilesParsingService).As<ILogFilesParsingService>();
+            var logFileRptGeneratorService = new LogFileRptGeneratorService();
+            builder.RegisterInstance(logFileRptGeneratorService).As<ILogFileRptGeneratorService>();
             base.ConfigureContainerBuilder(builder);
         }
 

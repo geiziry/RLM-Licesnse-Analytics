@@ -19,24 +19,31 @@ namespace CMG.License.Services.Impls
 
                 LogEvents tokenType;
 
-                if(Enum.TryParse( tokens[0], out tokenType))
-                switch (tokenType)
-                {
-                    case LogEvents.IN:
-                        logFile.CheckIns.Add(tokens);
-                        break;
-                    case LogEvents.OUT:
-                        logFile.CheckOuts.Add(tokens);
-                        break;
-                    case LogEvents.DENY:
-                        logFile.Denials.Add(tokens);
-                        break;
-                    case LogEvents.START:
-                        logFile.Start = tokens;
-                        break;
-                    default:
-                        break;
-                }
+                if (Enum.TryParse(tokens[0], out tokenType))
+                    switch (tokenType)
+                    {
+                        case LogEvents.PRODUCT:
+                            logFile.Products.Add(tokens);
+                            break;
+                        case LogEvents.IN:
+                            logFile.CheckIns.Add(tokens);
+                            break;
+
+                        case LogEvents.OUT:
+                            logFile.CheckOuts.Add(tokens);
+                            break;
+
+                        case LogEvents.DENY:
+                            logFile.Denials.Add(tokens);
+                            break;
+
+                        case LogEvents.START:
+                            logFile.Start = tokens;
+                            break;
+
+                        default:
+                            break;
+                    }
             }
         }
     }

@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\LogFile.cs" />
+    <Compile Include="DataTypes\LogRptDTO.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="PrismHelpers\PrismRegions.cs" />
     <Compile Include="PrismHelpers\RegionMetaData.cs" />

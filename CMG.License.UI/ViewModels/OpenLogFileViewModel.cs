@@ -13,7 +13,7 @@ namespace CMG.License.UI.ViewModels
         private const string excelTemplate = "cmgusage log.xlsx";
 
         private readonly ILogFilesParsingService logFilesParsingService;
-
+        private readonly ILogFileRptGeneratorService logFileRptGeneratorService;
         private DelegateCommand generateReportCmd;
 
         private DelegateCommand getLogFilePathCmd;
@@ -22,9 +22,11 @@ namespace CMG.License.UI.ViewModels
 
         private string logFilePath;
 
-        public OpenLogFileViewModel(ILogFilesParsingService logFilesParsingService)
+        public OpenLogFileViewModel(ILogFilesParsingService logFilesParsingService,
+            ILogFileRptGeneratorService logFileRptGeneratorService)
         {
             this.logFilesParsingService = logFilesParsingService;
+            this.logFileRptGeneratorService = logFileRptGeneratorService;
         }
 
         public DelegateCommand GenerateReportCmd
@@ -51,6 +53,7 @@ namespace CMG.License.UI.ViewModels
             {
                 var logFile = new LogFile(logFileName);
                 logFilesParsingService.ParseLogFileEvents(ref logFile);
+                logFileRptGeneratorService.GenerateReport(logFile);
             }
         }
 
