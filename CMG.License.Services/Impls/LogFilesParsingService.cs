@@ -13,6 +13,7 @@ namespace CMG.License.Services.Impls
             if (!logFile.Exists())
                 return;
             var lines = File.ReadAllLines(logFile.Path);
+            int i = 0;
             foreach (var line in lines)
             {
                 var tokens = line.Split(null).ToList();
@@ -23,18 +24,18 @@ namespace CMG.License.Services.Impls
                     switch (tokenType)
                     {
                         case LogEvents.PRODUCT:
-                            logFile.Products.Add(tokens);
+                            logFile.Products[i]=tokens;
                             break;
                         case LogEvents.IN:
-                            logFile.CheckIns.Add(tokens);
+                            logFile.CheckIns[i] = tokens;
                             break;
 
                         case LogEvents.OUT:
-                            logFile.CheckOuts.Add(tokens);
+                            logFile.CheckOuts[i] = tokens;
                             break;
 
                         case LogEvents.DENY:
-                            logFile.Denials.Add(tokens);
+                            logFile.Denials[i] = tokens;
                             break;
 
                         case LogEvents.START:
@@ -44,6 +45,7 @@ namespace CMG.License.Services.Impls
                         default:
                             break;
                     }
+                i++;
             }
         }
     }

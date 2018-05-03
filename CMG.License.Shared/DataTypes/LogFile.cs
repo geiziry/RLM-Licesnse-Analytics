@@ -41,10 +41,10 @@ namespace CMG.License.Shared.DataTypes
         public LogFile(string filePath)
         {
             this.filePath = filePath;
-            Products = new  List<List<string>>();
-            CheckIns = new List<List<string>>();
-            CheckOuts = new List<List<string>>();
-            Denials = new List<List<string>>();
+            Products = new Dictionary<int, List<string>>();
+            CheckIns = new Dictionary<int, List<string>>();
+            CheckOuts = new Dictionary<int, List<string>>();
+            Denials = new Dictionary<int, List<string>>();
         }
 
         public bool Exists()
@@ -52,10 +52,10 @@ namespace CMG.License.Shared.DataTypes
             return File.Exists(filePath);
         }
         public string Path { get { return filePath; }}
-        public List<List<string>> Products { get; set; }
-        public List<List<string>> CheckIns { get; set; }
-        public List<List<string>> CheckOuts { get; set; }
-        public List<List<string>> Denials { get; set; }
+        public Dictionary<int,List<string>> Products { get; set; }
+        public Dictionary<int,List<string>> CheckIns { get; set; }
+        public Dictionary<int,List<string>> CheckOuts { get; set; }
+        public Dictionary<int, List<string>> Denials { get; set; }
         public List<string> Start { get; set; }
     }
 }

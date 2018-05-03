@@ -21,23 +21,23 @@ namespace CMG.License.Services.Impls
             var year = logFile.Start[Start.date].Split('/')[2];
             List<LogRptDto> report = new List<LogRptDto>();
 
-            foreach (var checkOut in logFile.CheckOuts)
+            foreach (var checkOutKey in logFile.CheckOuts.Keys)
             {
                 var logRptDto = new LogRptDto
                 {
-                    Product = checkOut[CheckOut.product],
-                    Version = checkOut[CheckOut.version],
-                    UserName = checkOut[CheckOut.user],
-                    HostName = checkOut[CheckOut.host],
-                    InstalledCount = Int32.Parse(GetProductInstalledLicCount(checkOut[CheckOut.product],logFile)),
-                    InUse = Int32.Parse(checkOut[CheckOut.cur_use]),
-                    OutTime = DateTime.ParseExact($"{year}/{checkOut[CheckOut.mm_dd]} {checkOut[CheckOut.time]}", 
+                    Product = logFile.CheckOuts[checkOutKey][CheckOut.product],
+                    Version = logFile.CheckOuts[checkOutKey][CheckOut.version],
+                    UserName = logFile.CheckOuts[checkOutKey][CheckOut.user],
+                    HostName = logFile.CheckOuts[checkOutKey][CheckOut.host],
+                    InstalledCount = Int32.Parse(GetProductInstalledLicCount(logFile.CheckOuts[checkOutKey][CheckOut.product], logFile)),
+                    InUse = Int32.Parse(logFile.CheckOuts[checkOutKey][CheckOut.cur_use]),
+                    OutTime = DateTime.ParseExact($"{year}/{logFile.CheckOuts[checkOutKey][CheckOut.mm_dd]} {logFile.CheckOuts[checkOutKey][CheckOut.time]}",
                     "yyyy/MM/dd HH:mm:ss",
                     System.Globalization.CultureInfo.InvariantCulture),
-                    InTime = DateTime.ParseExact($"{year}{GetStrCheckInTime(checkOut[CheckOut.server_handle],logFile)}",
+                    InTime = DateTime.ParseExact($"{year}{GetStrCheckInTime(logFile.CheckOuts[checkOutKey][CheckOut.server_handle], logFile)}",
                     "yyyy/MM/dd HH:mm:ss",
                     System.Globalization.CultureInfo.InvariantCulture),
-                    RequestTime= DateTime.ParseExact($"{year}{GetStrRequestTime(checkOut, logFile)}",
+                    RequestTime = DateTime.ParseExact($"{year}{GetStrRequestTime(checkOutKey, logFile)}",
                     "yyyy/MM/dd HH:mm:ss",
                     System.Globalization.CultureInfo.InvariantCulture)
                 };
@@ -48,19 +48,27 @@ namespace CMG.License.Services.Impls
             return report;
         }
 
-        private object GetStrRequestTime(List<string> checkOut, LogFile logFile)
+        private object GetStrRequestTime(int checkOutKey, LogFile logFile)
         {
             string strRequestTime = string.Empty;
             if (!logFile.Denials.Any())
-                strRequestTime = $"/{checkOut[CheckOut.mm_dd]} {checkOut[CheckOut.time]}";
+                strRequestTime = $"/{logFile.CheckOuts[checkOutKey][CheckOut.mm_dd]} {logFile.CheckOuts[checkOutKey][CheckOut.time]}";
             else
             {
+                string productName = logFile.CheckOuts[checkOutKey][CheckOut.product];
+                string userName = logFile.CheckOuts[checkOutKey][CheckOut.user];
+
                 var userDenialsForProduct = logFile.Denials.Where(x =>
-                                      x[Deny.user] == checkOut[CheckOut.user]
-                                      && x[Deny.product] == checkOut[CheckOut.product]);
+                                      x.Value[Deny.user] == userName
+                                      && x.Value[Deny.product] == productName);
                 if (userDenialsForProduct.Any())
                 {
-                    var lastCheckOutBeforCurrForProd=logFile.CheckOuts.las
+                    var lastCheckOutBeforCurrForProd = logFile.CheckOuts.Where(x => x.Key < checkOutKey
+                                                    && x.Value[CheckOut.product] == productName)
+                                                    .OrderBy(x => x.Key).LastOrDefault();
+                    var firstDenialforUserAfterAbove = userDenialsForProduct.FirstOrDefault(x =>
+                                      x.Key > lastCheckOutBeforCurrForProd.Key).Value;
+                    strRequestTime = $"/{firstDenialforUserAfterAbove?[Deny.mm_dd]} {firstDenialforUserAfterAbove?[Deny.time]}";
                 }
             }
             return strRequestTime;
@@ -69,9 +77,9 @@ namespace CMG.License.Services.Impls
         private string GetProductInstalledLicCount(string productName, LogFile logFile)
         {
             string licCount = string.Empty;
-            if(logFile.Products.Count>0)
+            if (logFile.Products.Count > 0)
             {
-                var product = logFile.Products.FirstOrDefault(x => x[Product.name] == productName);
+                var product = logFile.Products.Values.FirstOrDefault(x => x[Product.name] == productName);
                 licCount = product?[Product.count];
             }
             return licCount;
@@ -80,11 +88,11 @@ namespace CMG.License.Services.Impls
         private string GetStrCheckInTime(string serverHandle, LogFile logFile)
         {
             string strCheckInTime = string.Empty;
-            if (logFile.CheckIns.Count>0)
+            if (logFile.CheckIns.Count > 0)
             {
-                var checkIn = logFile.CheckIns.FirstOrDefault(x => x[CheckIn.server_handle] == serverHandle);
-                if(checkIn!=null)
-                    strCheckInTime=$"/{checkIn[CheckIn.mm_dd]} {checkIn[CheckIn.time]}";
+                var checkIn = logFile.CheckIns.Values.FirstOrDefault(x => x[CheckIn.server_handle] == serverHandle);
+                if (checkIn != null)
+                    strCheckInTime = $"/{checkIn[CheckIn.mm_dd]} {checkIn[CheckIn.time]}";
             }
             return strCheckInTime;
         }
