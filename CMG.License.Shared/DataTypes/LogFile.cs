@@ -10,7 +10,6 @@ namespace CMG.License.Shared.DataTypes
             options = 12, share = 13, max_share = 14, type = 15, named_user_count = 16,
             meter_type = 17, meter_counter = 18, meter_initial_decrement = 19, meter_period = 20, meter_period_decrement = 21;
     }
-
     public static class CheckIn
     {
         public const int why = 1, product = 2, version = 3, user = 4,
@@ -26,13 +25,17 @@ namespace CMG.License.Shared.DataTypes
     public static class Deny
     {
         public const int product = 1, version = 2, user = 3, host = 4, isv_def = 5, count = 6,
-            why = 7, last_attempt = 8, pid = 9, mm_dd = 10, time = 11;
+            why = 7, last_attempt = 8, mm_dd = 9, time = 10;
     }
     public static class Start
     {
         public const int server_name = 1, date = 2, time = 3;
     }
-    public enum LogEvents {PRODUCT,IN,OUT,DENY,START}
+    public static class InUse
+    {
+        public const int product=1,version=2,pool=3,user=4,host=5,isv_def=6,count=7,server_handle=8,share_handle=9,process_id=10,mm_dd=11,time=12;
+    }
+    public enum LogEvents {PRODUCT,IN,OUT,DENY,START,INUSE}
 
     public class LogFile
     {
@@ -45,6 +48,7 @@ namespace CMG.License.Shared.DataTypes
             CheckIns = new Dictionary<int, List<string>>();
             CheckOuts = new Dictionary<int, List<string>>();
             Denials = new Dictionary<int, List<string>>();
+            InUses = new Dictionary<int, List<string>>();
         }
 
         public bool Exists()
@@ -56,6 +60,8 @@ namespace CMG.License.Shared.DataTypes
         public Dictionary<int,List<string>> CheckIns { get; set; }
         public Dictionary<int,List<string>> CheckOuts { get; set; }
         public Dictionary<int, List<string>> Denials { get; set; }
+        public Dictionary<int, List<string>> InUses { get; set; }
         public List<string> Start { get; set; }
+        public string Year { get {return Start?[DataTypes.Start.date].Split('/')[2]; } }
     }
 }

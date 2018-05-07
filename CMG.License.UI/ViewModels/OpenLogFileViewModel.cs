@@ -14,6 +14,7 @@ namespace CMG.License.UI.ViewModels
 
         private readonly ILogFilesParsingService logFilesParsingService;
         private readonly ILogFileRptGeneratorService logFileRptGeneratorService;
+        private readonly ILogFilesExcelProviderService logFilesExcelProviderService;
         private DelegateCommand generateReportCmd;
 
         private DelegateCommand getLogFilePathCmd;
@@ -23,10 +24,12 @@ namespace CMG.License.UI.ViewModels
         private string logFilePath;
 
         public OpenLogFileViewModel(ILogFilesParsingService logFilesParsingService,
-            ILogFileRptGeneratorService logFileRptGeneratorService)
+            ILogFileRptGeneratorService logFileRptGeneratorService,
+            ILogFilesExcelProviderService logFilesExcelProviderService)
         {
             this.logFilesParsingService = logFilesParsingService;
             this.logFileRptGeneratorService = logFileRptGeneratorService;
+            this.logFilesExcelProviderService = logFilesExcelProviderService;
         }
 
         public DelegateCommand GenerateReportCmd
@@ -49,22 +52,34 @@ namespace CMG.License.UI.ViewModels
         {
             if (!excelTemplate.ExtractResourceFile(logFilePath))
                 return;
+
+            logFileRptGeneratorService.InitializeReport();
+
             foreach (var logFileName in logFileNames)
             {
                 var logFile = new LogFile(logFileName);
                 logFilesParsingService.ParseLogFileEvents(ref logFile);
                 logFileRptGeneratorService.GenerateReport(logFile);
             }
+
+            var reportRows = logFileRptGeneratorService.GetReportRows();
+            logFilesExcelProviderService.FillXlsxTemplate(reportRows, GetExcelTemplatePath(logFilePath));
         }
 
         private void GetLogFilePath()
         {
             var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Multiselect = true;
             if (dialog.ShowDialog() == true)
             {
                 logFileNames = new List<string>(dialog.FileNames);
                 LogFilePath = Path.GetDirectoryName(dialog.FileNames[0]);
             }
+        }
+
+        private string GetExcelTemplatePath(string logFilePath)
+        {
+            return Path.GetDirectoryName(logFilePath) + $@"\{excelTemplate}";
         }
     }
 }

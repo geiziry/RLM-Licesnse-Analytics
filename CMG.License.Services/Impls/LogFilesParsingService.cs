@@ -3,6 +3,7 @@ using CMG.License.Shared.DataTypes;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CMG.License.Services.Impls
 {
@@ -16,16 +17,19 @@ namespace CMG.License.Services.Impls
             int i = 0;
             foreach (var line in lines)
             {
-                var tokens = line.Split(null).ToList();
+                var tokens = Regex.Matches(line, "((?<=\")[^\"]*(?=\"(\\s|$)+)|(?<=\\s|^)[^\\s\"]*(?=\\s|$))") //@"[\""].+?[\""]|[^ ]+"
+                .Cast<Match>()
+                .Select(m => m.Value)
+                .ToList();
 
                 LogEvents tokenType;
-
-                if (Enum.TryParse(tokens[0], out tokenType))
+                if (tokens.Any() && Enum.TryParse(tokens[0], out tokenType))
                     switch (tokenType)
                     {
                         case LogEvents.PRODUCT:
-                            logFile.Products[i]=tokens;
+                            logFile.Products[i] = tokens;
                             break;
+
                         case LogEvents.IN:
                             logFile.CheckIns[i] = tokens;
                             break;
@@ -40,6 +44,10 @@ namespace CMG.License.Services.Impls
 
                         case LogEvents.START:
                             logFile.Start = tokens;
+                            break;
+
+                        case LogEvents.INUSE:
+                            logFile.InUses[i] = tokens;
                             break;
 
                         default:

@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impls\CheckInTimeProcessingService.cs" />
+    <Compile Include="Impls\RequestTimeProcessingService.cs" />
     <Compile Include="Interfaces\ILogFileRptGeneratorService.cs" />
     <Compile Include="Impls\LogFileRptGeneratorService.cs" />
     <Compile Include="Impls\LogFilesExcelProviderService.cs" />

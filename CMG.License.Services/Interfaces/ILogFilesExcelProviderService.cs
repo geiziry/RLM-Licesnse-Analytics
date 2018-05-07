@@ -1,9 +1,10 @@
 ﻿using CMG.License.Shared.DataTypes;
+using System.Collections.Generic;
 
 namespace CMG.License.Services.Interfaces
 {
     public interface ILogFilesExcelProviderService
     {
-        void FillXlsxTemplate(LogFile logFile, string excelTemplate);
+        void FillXlsxTemplate(List<LogRptDto> ReportRows, string excelTemplatePath);
     }
 }

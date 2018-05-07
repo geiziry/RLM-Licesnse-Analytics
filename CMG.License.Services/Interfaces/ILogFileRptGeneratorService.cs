@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
-using CMG.License.Shared.DataTypes;
+﻿using CMG.License.Shared.DataTypes;
+using System.Collections.Generic;
 
 namespace CMG.License.Services.Interfaces
 {
     public interface ILogFileRptGeneratorService
     {
-        List<LogRptDto> GenerateReport(LogFile logFile);
+        void GenerateReport(LogFile logFile);
+
+        void InitializeReport();
+
+        List<LogRptDto> GetReportRows();
     }
 }
