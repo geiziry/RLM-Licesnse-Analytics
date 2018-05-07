@@ -45,7 +45,7 @@ namespace CMG.License.Services.Impls
                     InstalledCount = Int32.Parse(GetProductInstalledLicCount(product, logFile)),
                     InUse = Int32.Parse(checkOut[CheckOut.cur_use]),
                     OutTime = GetOutTime(checkOutKey, logFile),
-                    InTime = CheckInTimeProcessingService.GetCheckInTime(server_handle, logFile),
+                    InTime = CheckInTimeProcessingService.GetCheckInTime(checkOutKey, logFile),
                     RequestTime = RequestTimeProcessingService.GetStrRequestTime(checkOutKey, logFile)
                 };
                 if (logRptDto.InTime > DateTime.MinValue)
@@ -60,7 +60,7 @@ namespace CMG.License.Services.Impls
             foreach (var server_handle in InUseCheckOuts.Keys.ToList())
             {
                 var noCheckInlogRptDto = InUseCheckOuts[server_handle];
-                var InTime = CheckInTimeProcessingService.GetCheckInTime(server_handle, logFile);
+                var InTime = CheckInTimeProcessingService.GetCheckInTime(noCheckInlogRptDto,server_handle, logFile);
                 if (InTime > DateTime.MinValue)
                 {
                     noCheckInlogRptDto.InTime = InTime;
