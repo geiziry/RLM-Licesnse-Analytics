@@ -11,6 +11,7 @@ namespace CMG.License.Services.Impls
     {
         public void FillXlsxTemplate(List<LogRptDto> ReportRows, string excelTemplatePath)
         {
+            //TODO: continue on formatting the pivot chart
             var xlsFileInfo = new FileInfo(@"C:\Users\mgeiziry\Desktop\test.xlsx");
             //if (!xlsFileInfo.Exists)
             //    return;
@@ -39,10 +40,17 @@ namespace CMG.License.Services.Impls
                 pivotTable.RowFields.Add(pivotTable.Fields[1]);
                 //Add Product in Columns field
                 pivotTable.ColumnFields.Add(pivotTable.Fields[3]);
-                
+                //Add Current in use as dataField
                 var dataField = pivotTable.DataFields.Add(pivotTable.Fields[8]);
                 dataField.Function = OfficeOpenXml.Table.PivotTable.DataFieldFunctions.Max;
                 pivotTable.DataOnRows = true;
+                //Add pivot chart
+                var chart = wsPivot.Drawings.AddChart("PivotChart", OfficeOpenXml.Drawing.Chart.eChartType.ColumnClustered, pivotTable);
+                chart.Style = OfficeOpenXml.Drawing.Chart.eChartStyle.Style47;
+                chart.SetPosition(1, 0, 4, 0);
+                chart.SetSize(600, 400);
+
+
                 xlsFile.Save();
             }
         }
