@@ -82,6 +82,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\OpenLogFileCoordinatorActor.cs" />
+    <Compile Include="Actors\ProgressTellerActor.cs" />
     <Compile Include="UiModule.cs" />
     <Compile Include="UiModuleRegistery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

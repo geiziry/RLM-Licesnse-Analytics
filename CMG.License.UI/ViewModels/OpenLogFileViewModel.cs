@@ -1,7 +1,11 @@
-﻿using CMG.License.Services.Interfaces;
+﻿using Akka.Actor;
+using CMG.License.Services.Interfaces;
+using CMG.License.Shared.AkkaHelpers;
 using CMG.License.Shared.DataTypes;
+using CMG.License.UI.Actors;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -62,9 +66,11 @@ namespace CMG.License.UI.ViewModels
             set => SetProperty(ref logFileNames, value);
         }
 
+        public IActorRef OpenLogFileCoordinatorActor { get; private set; }
+
         #endregion Properties
 
-        public OpenLogFileViewModel(ILogFilesParsingService logFilesParsingService,
+        public OpenLogFileViewModel(IActorRefFactory actorSystem, ILogFilesParsingService logFilesParsingService,
                     ILogFileRptGeneratorService logFileRptGeneratorService,
             ILogFilesExcelProviderService logFilesExcelProviderService)
         {
@@ -72,6 +78,14 @@ namespace CMG.License.UI.ViewModels
             this.logFileRptGeneratorService = logFileRptGeneratorService;
             this.logFilesExcelProviderService = logFilesExcelProviderService;
             LogFiles = new ObservableCollection<LogFile>();
+            InitializeActors(actorSystem);
+        }
+
+        private void InitializeActors(IActorRefFactory actorSystem)
+        {
+            OpenLogFileCoordinatorActor = 
+                actorSystem.ActorOf(Props.Create(() => new OpenLogFileCoordinatorActor(this)),
+                                                    ActorPaths.OpenLogFileCoordinatorActor.Name);
         }
 
         private void GenerateReport()
