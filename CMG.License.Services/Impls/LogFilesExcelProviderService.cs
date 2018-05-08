@@ -51,7 +51,7 @@ namespace CMG.License.Services.Impls
                 chart.SetSize(600, 400);
 
 
-                xlsFile.Save();
+                //xlsFile.Save();
             }
         }
     }

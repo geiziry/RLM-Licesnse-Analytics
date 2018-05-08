@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using Akka.Actor;
+using Autofac;
 using CMG.License.Services.Impls;
 using CMG.License.Services.Interfaces;
 using CMG.License.UI;
@@ -19,13 +20,13 @@ namespace CMG.License.Analytics
             builder.RegisterInstance(logFileRptGeneratorService).As<ILogFileRptGeneratorService>();
             var logFilesExcelProviderService = new LogFilesExcelProviderService();
             builder.RegisterInstance(logFilesExcelProviderService).As<ILogFilesExcelProviderService>();
-
+            builder.RegisterInstance(App.AppActorSystem).As<IActorRefFactory>().ExternallyOwned();
             base.ConfigureContainerBuilder(builder);
         }
 
         protected override void ConfigureModuleCatalog()
         {
-            var uiModule = typeof(UI.UiModule);
+            var uiModule = typeof(UiModule);
             ModuleCatalog.AddModule(
                 new ModuleInfo
                 {

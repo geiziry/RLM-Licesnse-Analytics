@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:CMG.License.Shared.Converters;assembly=CMG.License.Shared"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
       xmlns:prism="http://prismlibrary.com/"
@@ -12,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CMG.License.UI;component/DataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:BoolToVisConverter x:Key="visConverter"/>
         </ResourceDictionary>
     </Grid.Resources>
     <DockPanel LastChildFill="True">
@@ -31,16 +33,26 @@
                 <TextBlock Text="{Binding LogFilePath}" />
             </StackPanel>
         </GroupBox>
-        <DockPanel DockPanel.Dock="Top" Margin="10,5">
-            <TextBlock Text="Over all Progress"/>
-            <TextBlock HorizontalAlignment="Right">
-                <Run Text="{Binding Items.Count, ElementName=logFilesList, Mode=OneWay}"/>
+        <StackPanel DockPanel.Dock="Top" Margin="10,5" 
+                    Visibility="{Binding IsGeneratingReport,Converter={StaticResource visConverter}}">
+            <DockPanel>
+                <TextBlock Text="Over all Progress"/>
+                <TextBlock HorizontalAlignment="Right">
+                <Run Text="{Binding OverallProgress}"/>
                 <Run Text="/"/>
-                <Run Text="{Binding ItemsSource.Count, ElementName=logFilesList, Mode=OneWay}"/>
-            </TextBlock>
-        </DockPanel>
-        <ProgressBar DockPanel.Dock="Top" Height="10"/>
-        <Border HorizontalAlignment="Stretch"  BorderBrush="#D5DFE5" BorderThickness="1" Margin="10">
+                <Run Text="{Binding Items.Count, ElementName=logFilesList, Mode=OneWay}"/>
+                </TextBlock>
+            </DockPanel>
+            <ProgressBar DockPanel.Dock="Top" 
+                         Height="10"
+                         Minimum="0"
+                         Maximum="{Binding LogFileNames.Count}"
+                         Value="{Binding OverallProgress}"/>
+        </StackPanel>
+        <Border HorizontalAlignment="Stretch"  
+                BorderBrush="#D5DFE5" 
+                BorderThickness="1" 
+                Margin="10">
             <ListView x:Name="logFilesList"
                       ItemTemplate="{DynamicResource progressListItem}"
                       ItemsSource="{Binding LogFiles}">

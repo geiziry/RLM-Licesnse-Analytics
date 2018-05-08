@@ -30,9 +30,11 @@ namespace CMG.License.Services.Impls
         {
             if (InUseCheckOuts.Any())
                 GetCheckInforInUseOuts(logFile);
-
+            int i = 0;
             foreach (var checkOutKey in logFile.CheckOuts.Keys)
             {
+                i++;
+                logFile.ProgressInt = i*100 / logFile.CheckOuts.Count;
                 var checkOut = logFile.CheckOuts[checkOutKey];
                 var product = checkOut[CheckOut.product];
                 var server_handle = checkOut[CheckOut.server_handle];

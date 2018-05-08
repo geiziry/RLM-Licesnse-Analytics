@@ -1,6 +1,5 @@
 ﻿using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
-using CMG.License.Shared.Helpers;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace CMG.License.UI.ViewModels
 {
     public class OpenLogFileViewModel : BindableBase
     {
-        private const string excelTemplate = "cmgusage log.xlsx";
+        #region Properties
 
         private readonly ILogFileRptGeneratorService logFileRptGeneratorService;
         private readonly ILogFilesExcelProviderService logFilesExcelProviderService;
@@ -25,14 +24,7 @@ namespace CMG.License.UI.ViewModels
 
         private string logFilePath;
 
-        public OpenLogFileViewModel(ILogFilesParsingService logFilesParsingService,
-            ILogFileRptGeneratorService logFileRptGeneratorService,
-            ILogFilesExcelProviderService logFilesExcelProviderService)
-        {
-            this.logFilesParsingService = logFilesParsingService;
-            this.logFileRptGeneratorService = logFileRptGeneratorService;
-            this.logFilesExcelProviderService = logFilesExcelProviderService;
-        }
+        private int overallProgress = 0;
 
         public DelegateCommand GenerateReportCmd
             => generateReportCmd ?? (generateReportCmd = new DelegateCommand(GenerateReport, () => !string.IsNullOrEmpty(LogFilePath)));
@@ -57,12 +49,42 @@ namespace CMG.License.UI.ViewModels
         }
 
         public ObservableCollection<LogFile> LogFiles { get; set; }
+
+        public int OverallProgress
+        {
+            get { return overallProgress; }
+            set { SetProperty(ref overallProgress, value); }
+        }
+
+        public List<string> LogFileNames
+        {
+            get => logFileNames;
+            set => SetProperty(ref logFileNames, value);
+        }
+
+        #endregion Properties
+
+        public OpenLogFileViewModel(ILogFilesParsingService logFilesParsingService,
+                    ILogFileRptGeneratorService logFileRptGeneratorService,
+            ILogFilesExcelProviderService logFilesExcelProviderService)
+        {
+            this.logFilesParsingService = logFilesParsingService;
+            this.logFileRptGeneratorService = logFileRptGeneratorService;
+            this.logFilesExcelProviderService = logFilesExcelProviderService;
+            LogFiles = new ObservableCollection<LogFile>();
+        }
+
         private void GenerateReport()
         {
             logFileRptGeneratorService.InitializeReport();
+            //initialize progress
+            OverallProgress = 0;
+            LogFiles.Clear();
 
-            foreach (var logFileName in logFileNames)
+            foreach (var logFileName in LogFileNames)
             {
+                IsGeneratingReport = true;
+                OverallProgress++;
                 var logFile = new LogFile(logFileName);
                 LogFiles.Add(logFile);
                 logFilesParsingService.ParseLogFileEvents(ref logFile);
@@ -73,9 +95,10 @@ namespace CMG.License.UI.ViewModels
             logFilesExcelProviderService.FillXlsxTemplate(reportRows, GetExcelTemplatePath(logFilePath));
         }
 
+        //TODO: specify the generated Excel file name and path
         private string GetExcelTemplatePath(string logFilePath)
         {
-            return Path.GetDirectoryName(logFilePath) + $@"\{excelTemplate}";
+            return Path.GetDirectoryName(logFilePath) + $@"\";
         }
 
         private void GetLogFilePath()
@@ -84,7 +107,7 @@ namespace CMG.License.UI.ViewModels
             dialog.Multiselect = true;
             if (dialog.ShowDialog() == true)
             {
-                logFileNames = new List<string>(dialog.FileNames);
+                LogFileNames = new List<string>(dialog.FileNames);
                 LogFilePath = Path.GetDirectoryName(dialog.FileNames[0]);
             }
         }

@@ -59,15 +59,5 @@ namespace CMG.License.Shared.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] cmgusage_log {
-            get {
-                object obj = ResourceManager.GetObject("cmgusage_log", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
