@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Prism.Mvvm;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CMG.License.Shared.DataTypes
@@ -37,7 +38,7 @@ namespace CMG.License.Shared.DataTypes
     }
     public enum LogEvents {PRODUCT,IN,OUT,DENY,START,INUSE}
 
-    public class LogFile
+    public class LogFile:BindableBase
     {
         private readonly string filePath;
 
@@ -63,5 +64,13 @@ namespace CMG.License.Shared.DataTypes
         public Dictionary<int, List<string>> InUses { get; set; }
         public List<string> Start { get; set; }
         public string Year { get {return Start?[DataTypes.Start.date].Split('/')[2]; } }
+        private int progressInt;
+
+        public int ProgressInt
+        {
+            get { return progressInt; }
+            set { SetProperty(ref progressInt, value);}
+        }
+
     }
 }

@@ -7,6 +7,13 @@
              d:DesignHeight="300" d:DesignWidth="300"
       xmlns:prism="http://prismlibrary.com/"
       prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CMG.License.UI;component/DataTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Grid.Resources>
     <DockPanel LastChildFill="True">
         <GroupBox DockPanel.Dock="Top" Header="CMG Log File"  Margin="10">
             <StackPanel  Margin="5,10,0,0">
@@ -24,7 +31,21 @@
                 <TextBlock Text="{Binding LogFilePath}" />
             </StackPanel>
         </GroupBox>
-        <ProgressBar DockPanel.Dock="Top" />
-        <Border HorizontalAlignment="Stretch"  BorderBrush="#D5DFE5" BorderThickness="1" Margin="10" />
+        <DockPanel DockPanel.Dock="Top" Margin="10,5">
+            <TextBlock Text="Over all Progress"/>
+            <TextBlock HorizontalAlignment="Right">
+                <Run Text="{Binding Items.Count, ElementName=logFilesList, Mode=OneWay}"/>
+                <Run Text="/"/>
+                <Run Text="{Binding ItemsSource.Count, ElementName=logFilesList, Mode=OneWay}"/>
+            </TextBlock>
+        </DockPanel>
+        <ProgressBar DockPanel.Dock="Top" Height="10"/>
+        <Border HorizontalAlignment="Stretch"  BorderBrush="#D5DFE5" BorderThickness="1" Margin="10">
+            <ListView x:Name="logFilesList"
+                      ItemTemplate="{DynamicResource progressListItem}"
+                      ItemsSource="{Binding LogFiles}">
+                
+            </ListView>
+        </Border>
     </DockPanel>
 </Grid>
