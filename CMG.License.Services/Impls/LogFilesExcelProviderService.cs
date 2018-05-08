@@ -9,12 +9,12 @@ namespace CMG.License.Services.Impls
 {
     public class LogFilesExcelProviderService : ILogFilesExcelProviderService
     {
-        public void FillXlsxTemplate(List<LogRptDto> ReportRows, string excelTemplatePath)
+        public void FillXlsxTemplate(List<LogRptDto> ReportRows, string excelRptFilePath)
         {
             //TODO: continue on formatting the pivot chart
-            var xlsFileInfo = new FileInfo(@"C:\Users\mgeiziry\Desktop\test.xlsx");
-            //if (!xlsFileInfo.Exists)
-            //    return;
+            var xlsFileInfo = new FileInfo(excelRptFilePath);
+            if (xlsFileInfo.Exists)
+                xlsFileInfo.Delete();
 
             using (var xlsFile=new ExcelPackage(xlsFileInfo))
             {

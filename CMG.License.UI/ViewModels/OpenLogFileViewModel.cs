@@ -59,9 +59,6 @@ namespace CMG.License.UI.ViewModels
         public ObservableCollection<LogFile> LogFiles { get; set; }
         private void GenerateReport()
         {
-            if (!excelTemplate.ExtractResourceFile(logFilePath))
-                return;
-
             logFileRptGeneratorService.InitializeReport();
 
             foreach (var logFileName in logFileNames)

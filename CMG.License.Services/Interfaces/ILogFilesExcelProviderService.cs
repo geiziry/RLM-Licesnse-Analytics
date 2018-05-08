@@ -5,6 +5,6 @@ namespace CMG.License.Services.Interfaces
 {
     public interface ILogFilesExcelProviderService
     {
-        void FillXlsxTemplate(List<LogRptDto> ReportRows, string excelTemplatePath);
+        void FillXlsxTemplate(List<LogRptDto> ReportRows, string excelRptFilePath);
     }
 }
