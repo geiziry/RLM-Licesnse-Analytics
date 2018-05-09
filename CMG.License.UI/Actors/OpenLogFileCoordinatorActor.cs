@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.DI.Core;
 using CMG.License.Shared.AkkaHelpers;
 using CMG.License.UI.ViewModels;
 
@@ -6,35 +7,15 @@ namespace CMG.License.UI.Actors
 {
     public class OpenLogFileCoordinatorActor : ReceiveActor
     {
-        private readonly OpenLogFileViewModel viewModel;
+        public IActorRef ProgressTellerActor { get; }
+        public IActorRef LogFileReportGeneratorActor { get; }
 
         public OpenLogFileCoordinatorActor(OpenLogFileViewModel viewModel)
         {
-            this.viewModel = viewModel;
             ProgressTellerActor=Context.ActorOf(Props.Create(() => new ProgressTellerActor(viewModel)),
                                                     ActorPaths.ProgressTellerActor.Name);
+            LogFileReportGeneratorActor= Context.ActorOf(Context.DI().Props<LogFileReportGeneratorActor>(),
+                                                    ActorPaths.LogFileReportGeneratorActor.Name);
         }
-
-        private void GenerateReport()
-        {
-            logFileRptGeneratorService.InitializeReport();
-            //initialize progress
-            OverallProgress = 0;
-            LogFiles.Clear();
-
-            foreach (var logFileName in LogFileNames)
-            {
-                IsGeneratingReport = true;
-                OverallProgress++;
-                var logFile = new LogFile(logFileName);
-                LogFiles.Add(logFile);
-                logFilesParsingService.ParseLogFileEvents(ref logFile);
-                logFileRptGeneratorService.GenerateReport(logFile);
-            }
-
-            var reportRows = logFileRptGeneratorService.GetReportRows();
-            logFilesExcelProviderService.FillXlsxTemplate(reportRows, GetExcelTemplatePath(logFilePath));
-        }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.DI.AutoFac;
 using Autofac;
 using CMG.License.Services.Impls;
 using CMG.License.Services.Interfaces;
@@ -13,6 +14,7 @@ namespace CMG.License.Analytics
     {
         protected override void ConfigureContainerBuilder(ContainerBuilder builder)
         {
+
             builder.RegisterModule<UiModuleRegistery>();
             var logFilesParsingService = new LogFilesParsingService();
             builder.RegisterInstance(logFilesParsingService).As<ILogFilesParsingService>();
@@ -39,6 +41,7 @@ namespace CMG.License.Analytics
 
         protected override DependencyObject CreateShell()
         {
+            var reslover = new AutoFacDependencyResolver(Container, App.AppActorSystem);
             return Container.Resolve<Shell>();
         }
 
