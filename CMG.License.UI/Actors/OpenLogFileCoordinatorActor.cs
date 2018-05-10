@@ -12,11 +12,13 @@ namespace CMG.License.UI.Actors
 
         public OpenLogFileCoordinatorActor(OpenLogFileViewModel viewModel)
         {
-            ProgressTellerActor=Context.ActorOf(Props.Create(() => new ProgressTellerActor(viewModel)),
+            ProgressTellerActor = Context.ActorOf(Props.Create(() => new ProgressTellerActor(viewModel)),
                                                     ActorPaths.ProgressTellerActor.Name);
-            LogFileReportGeneratorActor= Context.ActorOf(Context.DI().Props<LogFileReportGeneratorActor>(),
+            LogFileReportGeneratorActor = Context.ActorOf(Context.DI().Props<LogFileReportGeneratorActor>(),
                                                     ActorPaths.LogFileReportGeneratorActor.Name);
-            Receive<string>(message => { if (message == "Start") LogFileReportGeneratorActor.Tell(viewModel); });
+            Receive<string>(message =>{
+                if (message == "Start") LogFileReportGeneratorActor.Tell(viewModel);
+            });
         }
     }
 }

@@ -1,27 +1,32 @@
 ﻿using Akka.Actor;
+using Akka.DI.Core;
 using CMG.License.Services.Interfaces;
+using CMG.License.Shared.AkkaHelpers;
 using CMG.License.UI.ViewModels;
+using System;
+using System.Threading.Tasks;
 
 namespace CMG.License.UI.Actors
 {
     public class LogFileReportGeneratorActor : ReceiveActor
     {
+        private readonly IActorRef LogFilesParsingActor;
+        private readonly IActorRef logFilesExcelProviderActor;
         private readonly ILogFileRptGeneratorService logFileRptGeneratorService;
-        private readonly ILogFilesParsingService logFilesParsingService;
-        private readonly ILogFilesExcelProviderService logFilesExcelProviderService;
 
         public LogFileReportGeneratorActor(
-            ILogFileRptGeneratorService logFileRptGeneratorService,
-            ILogFilesParsingService logFilesParsingService,
-            ILogFilesExcelProviderService logFilesExcelProviderService)
+            ILogFileRptGeneratorService logFileRptGeneratorService)
         {
+            LogFilesParsingActor = Context.ActorOf(Context.DI().Props<LogFilesParsingActor>(),
+                                                                        ActorPaths.LogFilesParsingActor.Name);
+            logFilesExcelProviderActor= Context.ActorOf(Context.DI().Props<logFilesExcelProviderActor>(),
+                                                                        ActorPaths.logFilesExcelProviderActor.Name);
             this.logFileRptGeneratorService = logFileRptGeneratorService;
-            this.logFilesParsingService = logFilesParsingService;
-            this.logFilesExcelProviderService = logFilesExcelProviderService;
-            Receive<OpenLogFileViewModel>(viewModel =>  GenerateReport(viewModel));
+
+            Receive<OpenLogFileViewModel>(async viewModel => await GenerateReportAsync(viewModel));
         }
 
-        private void GenerateReport(OpenLogFileViewModel viewModel)
+        private async Task GenerateReportAsync(OpenLogFileViewModel viewModel)
         {
             logFileRptGeneratorService.InitializeReport();
             //initialize progress
@@ -31,12 +36,14 @@ namespace CMG.License.UI.Actors
             {
                 viewModel.IsGeneratingReport = true;
                 viewModel.OverallProgress++;
-                logFilesParsingService.ParseLogFileEvents(ref logFile);
+                await LogFilesParsingActor.Ask(logFile, TimeSpan.FromSeconds(2));
                 logFileRptGeneratorService.GenerateReport(logFile);
             }
 
             var reportRows = logFileRptGeneratorService.GetReportRows();
-            logFilesExcelProviderService.FillXlsxTemplate(reportRows, @"C:\Users\mgeiziry\Desktop\test.xlsx");
+            logFilesExcelProviderActor.Tell(reportRows);
+            viewModel.IsGeneratingReport = false;
         }
+
     }
 }

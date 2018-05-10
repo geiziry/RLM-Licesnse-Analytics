@@ -1,10 +1,13 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace CMG.License.Shared.DataTypes
 {
     #region enums
+
     public enum LogEvents { PRODUCT, IN, OUT, DENY, START, INUSE }
 
     public static class CheckIn
@@ -45,13 +48,13 @@ namespace CMG.License.Shared.DataTypes
         public const int server_name = 1, date = 2, time = 3;
     }
 
-    #endregion
-
+    #endregion enums
 
     public class LogFile : BindableBase
     {
         private readonly string filePath;
 
+        private DelegateCommand openFileCmd;
         private int progressInt;
 
         public LogFile(string filePath)
@@ -71,6 +74,10 @@ namespace CMG.License.Shared.DataTypes
         public Dictionary<int, List<string>> Denials { get; set; }
 
         public Dictionary<int, List<string>> InUses { get; set; }
+
+        public DelegateCommand OpenFileCmd
+                    => openFileCmd ?? (openFileCmd = new DelegateCommand(() => Process.Start("notepad.exe",Path),
+                    () => !string.IsNullOrEmpty(Path)));
 
         public string Path { get { return filePath; } }
 

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file is NOT compatible with Silverlight-->
+<Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+  <Canvas Name="svg3782" Width="133.61458" Height="133.61458">
+    <Canvas.RenderTransform>
+      <TranslateTransform X="0" Y="0"/>
+    </Canvas.RenderTransform>
+    <Canvas.Resources/>
+    <!--Unknown tag: sodipodi:namedview-->
+    <!--Unknown tag: metadata-->
+    <Canvas Name="layer2">
+      <Rectangle xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="0.75595242" Canvas.Top="0.56695616" Width="133.04762" Height="133.80357" Name="rect3892" Fill="#FF324A5E" StrokeThickness="0.26458332"/>
+    </Canvas>
+    <Canvas Name="layer1">
+      <Canvas.RenderTransform>
+        <TranslateTransform X="7.8430051" Y="-100.1689"/>
+      </Canvas.RenderTransform>
+      <Canvas Name="g3887">
+        <Canvas.RenderTransform>
+          <MatrixTransform Matrix="0.26458333 0 0 0.26458333 -7.8430051 100.1689"/>
+        </Canvas.RenderTransform>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="0" Canvas.Top="0" Width="505" Height="505" Name="circle3784" Fill="#FF324A5E"/>
+        <Polygon xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Points="367.9,135.9 377.7,148.2 291.2,217.4 214.1,142.8 143,235 130.5,225.4 212.4,119.2 292.2,196.4 " Name="polygon3786" FillRule="NonZero" Fill="#FFCED5E0"/>
+        <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3788" Fill="#FF2B3B4E">
+          <Path.Data>
+            <PathGeometry Figures="M 43.4 394.1 C 88.8 461 165.5 505 252.5 505 c 87 0 163.7 -44 209.1 -110.9 z" FillRule="NonZero"/>
+          </Path.Data>
+        </Path>
+        <Canvas Name="g3798">
+          <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3790" Fill="#FF54C0EB">
+            <Path.Data>
+              <PathGeometry Figures="m 394.8 385.4 h -49.3 c -1.2 0 -2.1 -0.9 -2.1 -2.1 V 204.6 c 0 -1.2 0.9 -2.1 2.1 -2.1 h 49.3 c 1.2 0 2.1 0.9 2.1 2.1 v 178.7 c 0 1.1 -0.9 2.1 -2.1 2.1 z" FillRule="NonZero"/>
+            </Path.Data>
+          </Path>
+          <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3792" Fill="#FF54C0EB">
+            <Path.Data>
+              <PathGeometry Figures="m 316.4 385.4 h -49.3 c -1.2 0 -2.1 -0.9 -2.1 -2.1 V 257.1 c 0 -1.2 0.9 -2.1 2.1 -2.1 h 49.3 c 1.2 0 2.1 0.9 2.1 2.1 v 126.2 c -0.1 1.1 -1 2.1 -2.1 2.1 z" FillRule="NonZero"/>
+            </Path.Data>
+          </Path>
+          <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3794" Fill="#FF54C0EB">
+            <Path.Data>
+              <PathGeometry Figures="m 237.9 385.4 h -49.3 c -1.2 0 -2.1 -0.9 -2.1 -2.1 V 193.2 c 0 -1.2 0.9 -2.1 2.1 -2.1 h 49.3 c 1.2 0 2.1 0.9 2.1 2.1 v 190.1 c 0 1.1 -0.9 2.1 -2.1 2.1 z" FillRule="NonZero"/>
+            </Path.Data>
+          </Path>
+          <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3796" Fill="#FF54C0EB">
+            <Path.Data>
+              <PathGeometry Figures="m 159.5 385.4 h -49.3 c -1.2 0 -2.1 -0.9 -2.1 -2.1 v -93.7 c 0 -1.2 0.9 -2.1 2.1 -2.1 h 49.3 c 1.2 0 2.1 0.9 2.1 2.1 v 93.7 c 0 1.1 -1 2.1 -2.1 2.1 z" FillRule="NonZero"/>
+            </Path.Data>
+          </Path>
+        </Canvas>
+        <Rectangle xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="73.300003" Canvas.Top="377" Width="358.39999" Height="17.1" Name="rect3800" Fill="#FFCED5E0"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="343.4" Canvas.Top="112.7" Width="58.8" Height="58.8" Name="circle3802" Fill="#FFE6E9EE"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="355.7" Canvas.Top="125" Width="34.2" Height="34.2" Name="circle3804" Fill="#FFFF7058"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="262.3" Canvas.Top="174.6" Width="58.8" Height="58.8" Name="circle3806" Fill="#FFE6E9EE"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="274.6" Canvas.Top="186.9" Width="34.2" Height="34.2" Name="circle3808" Fill="#FFFF7058"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="183.9" Canvas.Top="101.6" Width="58.8" Height="58.8" Name="circle3810" Fill="#FFE6E9EE"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="196.2" Canvas.Top="113.9" Width="34.2" Height="34.2" Name="circle3812" Fill="#FFFF7058"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="105.4" Canvas.Top="200.8" Width="58.8" Height="58.8" Name="circle3814" Fill="#FFE6E9EE"/>
+        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="117.7" Canvas.Top="213.1" Width="34.2" Height="34.2" Name="circle3816" Fill="#FFFF7058"/>
+        <Canvas Name="g3818"/>
+        <Canvas Name="g3820"/>
+        <Canvas Name="g3822"/>
+        <Canvas Name="g3824"/>
+        <Canvas Name="g3826"/>
+        <Canvas Name="g3828"/>
+        <Canvas Name="g3830"/>
+        <Canvas Name="g3832"/>
+        <Canvas Name="g3834"/>
+        <Canvas Name="g3836"/>
+        <Canvas Name="g3838"/>
+        <Canvas Name="g3840"/>
+        <Canvas Name="g3842"/>
+        <Canvas Name="g3844"/>
+        <Canvas Name="g3846"/>
+      </Canvas>
+    </Canvas>
+  </Canvas>
+</Viewbox>

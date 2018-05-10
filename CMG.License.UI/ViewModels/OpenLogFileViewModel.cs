@@ -19,23 +19,30 @@ namespace CMG.License.UI.ViewModels
 
         private DelegateCommand getLogFilePathCmd;
 
-        private bool isGeneratingReport;
+        private bool isGeneratingReport=false;
         private List<string> logFileNames = new List<string>();
 
         private string logFilePath;
 
         private int overallProgress = 0;
+        private ObservableCollection<LogFile> _logFiles;
 
         public DelegateCommand GenerateReportCmd
-            => generateReportCmd ?? (generateReportCmd = new DelegateCommand(GenerateReport, () => !string.IsNullOrEmpty(LogFilePath)));
+            => generateReportCmd ?? (generateReportCmd = new DelegateCommand(GenerateReport,
+                () => !string.IsNullOrEmpty(LogFilePath) && !IsGeneratingReport));
 
         public DelegateCommand GetLogFilePathCmd
-                            => getLogFilePathCmd ?? (getLogFilePathCmd = new DelegateCommand(GetLogFilePath, () => true));
+                            => getLogFilePathCmd ?? (getLogFilePathCmd = new DelegateCommand(GetLogFilePath, () => !IsGeneratingReport));
 
         public bool IsGeneratingReport
         {
             get { return isGeneratingReport; }
-            set { SetProperty(ref isGeneratingReport, value); }
+            set
+            {
+                SetProperty(ref isGeneratingReport, value);
+                GenerateReportCmd.RaiseCanExecuteChanged();
+                GetLogFilePathCmd.RaiseCanExecuteChanged();
+            }
         }
 
         public List<string> LogFileNames
@@ -54,7 +61,11 @@ namespace CMG.License.UI.ViewModels
             }
         }
 
-        public ObservableCollection<LogFile> LogFiles { get; set; }
+        public ObservableCollection<LogFile> LogFiles
+        {
+            get => _logFiles;
+            set => SetProperty(ref _logFiles, value);
+        }
 
         public IActorRef OpenLogFileCoordinatorActor { get; private set; }
 
@@ -63,6 +74,7 @@ namespace CMG.License.UI.ViewModels
             get { return overallProgress; }
             set { SetProperty(ref overallProgress, value); }
         }
+
         #endregion Properties
 
         public OpenLogFileViewModel(IActorRefFactory actorSystem)

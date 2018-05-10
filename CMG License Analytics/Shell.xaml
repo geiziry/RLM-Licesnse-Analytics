@@ -6,7 +6,8 @@
         mc:Ignorable="d"
         Title="CMG Log File Analytics Tool"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:regions="clr-namespace:CMG.License.Shared.PrismHelpers;assembly=CMG.License.Shared">
+        xmlns:regions="clr-namespace:CMG.License.Shared.PrismHelpers;assembly=CMG.License.Shared"
+        >
     <Grid>
         <ContentControl 
             prism:RegionManager.RegionName="{Binding Name, Source={x:Static regions:PrismRegions.MainRegion}}" />

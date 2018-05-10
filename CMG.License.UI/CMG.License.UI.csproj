@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actors\LogFileReportGeneratorActor.cs" />
+    <Compile Include="Actors\logFilesExcelProviderActor.cs" />
     <Compile Include="Actors\LogFilesParsingActor.cs" />
     <Compile Include="Actors\OpenLogFileCoordinatorActor.cs" />
     <Compile Include="Actors\ProgressTellerActor.cs" />
