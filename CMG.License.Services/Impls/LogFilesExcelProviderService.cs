@@ -1,6 +1,8 @@
 ﻿using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
 using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Chart;
+using OfficeOpenXml.Table.PivotTable;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,21 +39,20 @@ namespace CMG.License.Services.Impls
                 var pivotTable = wsPivot.PivotTables.Add(wsPivot.Cells["A1"], dataRange, "testPivotTbl");
 
                 //Add CheckOut Time in Rows field
-                pivotTable.RowFields.Add(pivotTable.Fields[1]);
+                pivotTable.RowFields.Add(pivotTable.Fields[1]).AddDateGrouping(eDateGroupBy.Days);
                 //Add Product in Columns field
                 pivotTable.ColumnFields.Add(pivotTable.Fields[3]);
                 //Add Current in use as dataField
                 var dataField = pivotTable.DataFields.Add(pivotTable.Fields[8]);
-                dataField.Function = OfficeOpenXml.Table.PivotTable.DataFieldFunctions.Max;
-                pivotTable.DataOnRows = true;
+                dataField.Function = DataFieldFunctions.Max;
                 //Add pivot chart
-                var chart = wsPivot.Drawings.AddChart("PivotChart", OfficeOpenXml.Drawing.Chart.eChartType.ColumnClustered, pivotTable);
-                chart.Style = OfficeOpenXml.Drawing.Chart.eChartStyle.Style47;
+                var chart = wsPivot.Drawings.AddChart("PivotChart", eChartType.ColumnClustered, pivotTable);
+                chart.Style = eChartStyle.Style8;
                 chart.SetPosition(1, 0, 4, 0);
                 chart.SetSize(600, 400);
 
 
-                //xlsFile.Save();
+                xlsFile.Save();
             }
         }
     }

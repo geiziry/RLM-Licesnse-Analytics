@@ -1,14 +1,13 @@
 ﻿using Akka.Actor;
-using CMG.License.Services.Interfaces;
 using CMG.License.Shared.AkkaHelpers;
 using CMG.License.Shared.DataTypes;
 using CMG.License.UI.Actors;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace CMG.License.UI.ViewModels
 {
@@ -16,9 +15,6 @@ namespace CMG.License.UI.ViewModels
     {
         #region Properties
 
-        private readonly ILogFileRptGeneratorService logFileRptGeneratorService;
-        private readonly ILogFilesExcelProviderService logFilesExcelProviderService;
-        private readonly ILogFilesParsingService logFilesParsingService;
         private DelegateCommand generateReportCmd;
 
         private DelegateCommand getLogFilePathCmd;
@@ -42,6 +38,12 @@ namespace CMG.License.UI.ViewModels
             set { SetProperty(ref isGeneratingReport, value); }
         }
 
+        public List<string> LogFileNames
+        {
+            get => logFileNames;
+            set => SetProperty(ref logFileNames, value);
+        }
+
         public string LogFilePath
         {
             get { return logFilePath; }
@@ -54,59 +56,23 @@ namespace CMG.License.UI.ViewModels
 
         public ObservableCollection<LogFile> LogFiles { get; set; }
 
+        public IActorRef OpenLogFileCoordinatorActor { get; private set; }
+
         public int OverallProgress
         {
             get { return overallProgress; }
             set { SetProperty(ref overallProgress, value); }
         }
-
-        public List<string> LogFileNames
-        {
-            get => logFileNames;
-            set => SetProperty(ref logFileNames, value);
-        }
-
-        public IActorRef OpenLogFileCoordinatorActor { get; private set; }
-
         #endregion Properties
 
-        public OpenLogFileViewModel(IActorRefFactory actorSystem, ILogFilesParsingService logFilesParsingService,
-                    ILogFileRptGeneratorService logFileRptGeneratorService,
-            ILogFilesExcelProviderService logFilesExcelProviderService)
+        public OpenLogFileViewModel(IActorRefFactory actorSystem)
         {
-            this.logFilesParsingService = logFilesParsingService;
-            this.logFileRptGeneratorService = logFileRptGeneratorService;
-            this.logFilesExcelProviderService = logFilesExcelProviderService;
-            LogFiles = new ObservableCollection<LogFile>();
             InitializeActors(actorSystem);
-        }
-
-        private void InitializeActors(IActorRefFactory actorSystem)
-        {
-            OpenLogFileCoordinatorActor = 
-                actorSystem.ActorOf(Props.Create(() => new OpenLogFileCoordinatorActor(this)),
-                                                    ActorPaths.OpenLogFileCoordinatorActor.Name);
         }
 
         private void GenerateReport()
         {
-            logFileRptGeneratorService.InitializeReport();
-            //initialize progress
-            OverallProgress = 0;
-            LogFiles.Clear();
-
-            foreach (var logFileName in LogFileNames)
-            {
-                IsGeneratingReport = true;
-                OverallProgress++;
-                var logFile = new LogFile(logFileName);
-                LogFiles.Add(logFile);
-                logFilesParsingService.ParseLogFileEvents(ref logFile);
-                logFileRptGeneratorService.GenerateReport(logFile);
-            }
-
-            var reportRows = logFileRptGeneratorService.GetReportRows();
-            logFilesExcelProviderService.FillXlsxTemplate(reportRows, GetExcelTemplatePath(logFilePath));
+            OpenLogFileCoordinatorActor.Tell("Start");
         }
 
         //TODO: specify the generated Excel file name and path
@@ -122,8 +88,21 @@ namespace CMG.License.UI.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 LogFileNames = new List<string>(dialog.FileNames);
-                LogFilePath = Path.GetDirectoryName(dialog.FileNames[0]);
+
+                if (LogFileNames.Any())
+                {
+                    LogFiles = new ObservableCollection<LogFile>();
+                    logFileNames.ForEach(x => LogFiles.Add(new LogFile(x)));
+                    LogFilePath = Path.GetDirectoryName(dialog.FileNames[0]);
+                }
             }
+        }
+
+        private void InitializeActors(IActorRefFactory actorSystem)
+        {
+            OpenLogFileCoordinatorActor =
+                actorSystem.ActorOf(Props.Create(() => new OpenLogFileCoordinatorActor(this)),
+                                                    ActorPaths.OpenLogFileCoordinatorActor.Name);
         }
     }
 }

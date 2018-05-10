@@ -35,18 +35,18 @@
         </GroupBox>
         <StackPanel DockPanel.Dock="Top" Margin="10,5" 
                     Visibility="{Binding IsGeneratingReport,Converter={StaticResource visConverter}}">
-            <DockPanel>
+            <DockPanel Margin="0,5">
                 <TextBlock Text="Over all Progress"/>
                 <TextBlock HorizontalAlignment="Right">
                 <Run Text="{Binding OverallProgress}"/>
                 <Run Text="/"/>
-                <Run Text="{Binding Items.Count, ElementName=logFilesList, Mode=OneWay}"/>
+                <Run Text="{Binding LogFileNames.Count,Mode=OneWay}"/>
                 </TextBlock>
             </DockPanel>
             <ProgressBar DockPanel.Dock="Top" 
                          Height="10"
                          Minimum="0"
-                         Maximum="{Binding LogFileNames.Count}"
+                         Maximum="{Binding LogFileNames.Count,Mode=OneWay}"
                          Value="{Binding OverallProgress}"/>
         </StackPanel>
         <Border HorizontalAlignment="Stretch"  

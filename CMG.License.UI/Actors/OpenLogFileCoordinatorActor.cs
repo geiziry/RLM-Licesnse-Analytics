@@ -16,6 +16,7 @@ namespace CMG.License.UI.Actors
                                                     ActorPaths.ProgressTellerActor.Name);
             LogFileReportGeneratorActor= Context.ActorOf(Context.DI().Props<LogFileReportGeneratorActor>(),
                                                     ActorPaths.LogFileReportGeneratorActor.Name);
+            Receive<string>(message => { if (message == "Start") LogFileReportGeneratorActor.Tell(viewModel); });
         }
     }
 }
