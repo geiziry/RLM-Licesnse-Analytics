@@ -81,6 +81,8 @@ namespace CMG.License.Shared.DataTypes
 
         public string Path { get { return filePath; } }
 
+        public int Id { get; set; }
+
         public Dictionary<int, List<string>> Products { get; set; }
 
         public int ProgressInt

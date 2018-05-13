@@ -19,7 +19,7 @@ namespace CMG.License.UI.Actors
         {
             LogFilesParsingActor = Context.ActorOf(Context.DI().Props<LogFilesParsingActor>(),
                                                                         ActorPaths.LogFilesParsingActor.Name);
-            logFilesExcelProviderActor= Context.ActorOf(Context.DI().Props<logFilesExcelProviderActor>(),
+            logFilesExcelProviderActor= Context.ActorOf(Context.DI().Props<LogFilesExcelProviderActor>(),
                                                                         ActorPaths.logFilesExcelProviderActor.Name);
             this.logFileRptGeneratorService = logFileRptGeneratorService;
 

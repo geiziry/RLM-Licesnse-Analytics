@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace CMG.License.UI.Actors
 {
-    public class logFilesExcelProviderActor : ReceiveActor
+    public class LogFilesExcelProviderActor : ReceiveActor
     {
-        public logFilesExcelProviderActor(ILogFilesExcelProviderService logFilesExcelProviderService)
+        public LogFilesExcelProviderActor(ILogFilesExcelProviderService logFilesExcelProviderService)
         {
             Receive<List<LogRptDto>>(reportRows => 
                     logFilesExcelProviderService.FillXlsxTemplate(reportRows, @"C:\Users\mgeiziry\Desktop\test.xlsx"));

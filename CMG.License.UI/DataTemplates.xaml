@@ -5,15 +5,18 @@
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="progressListItem">
-        <Grid 
+        <Grid
                          VerticalAlignment="Stretch">
-            <ProgressBar HorizontalAlignment="Stretch"
+            <ProgressBar
                          Value="{Binding ProgressInt}"
                          Minimum="0"
                          Maximum="100" Foreground="#FFA8D6B0" Background="White" BorderBrush="White" BorderThickness="0" />
-            <DockPanel HorizontalAlignment="Stretch">
-                <TextBlock HorizontalAlignment="Left"
-                           Text="{Binding Path}" />
+            <DockPanel>
+                <TextBlock HorizontalAlignment="Left">
+                    <Run Foreground="DarkRed" Text="{Binding Id,StringFormat='{}{0:000}' }"/>
+                    <Run Text=". " />
+                          <Run Text="{Binding Path,Mode=OneWay}" />
+                </TextBlock>
                 <Button HorizontalAlignment="Right"
                         Width="20"
                         Height="20"

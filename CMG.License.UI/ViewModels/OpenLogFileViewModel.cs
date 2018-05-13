@@ -104,7 +104,7 @@ namespace CMG.License.UI.ViewModels
                 if (LogFileNames.Any())
                 {
                     LogFiles = new ObservableCollection<LogFile>();
-                    logFileNames.ForEach(x => LogFiles.Add(new LogFile(x)));
+                    logFileNames.ForEach(x => LogFiles.Add(new LogFile(x) {Id=(LogFiles.Count+1) }));
                     LogFilePath = Path.GetDirectoryName(dialog.FileNames[0]);
                 }
             }
