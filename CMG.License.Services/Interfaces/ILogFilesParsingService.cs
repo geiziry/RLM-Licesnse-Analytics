@@ -4,6 +4,6 @@ namespace CMG.License.Services.Interfaces
 {
     public interface ILogFilesParsingService
     {
-        void ParseLogFileEvents(ref LogFile logFile);
+        LogFile ParseLogFileEvents(LogFile logFile);
     }
 }

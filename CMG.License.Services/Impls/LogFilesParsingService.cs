@@ -9,10 +9,10 @@ namespace CMG.License.Services.Impls
 {
     public class LogFilesParsingService : ILogFilesParsingService
     {
-        public void ParseLogFileEvents(ref LogFile logFile)
+        public LogFile ParseLogFileEvents(LogFile logFile)
         {
             if (!logFile.Exists())
-                return;
+                return null;
             var lines = File.ReadAllLines(logFile.Path);
             int i = 0;
             foreach (var line in lines)
@@ -55,6 +55,7 @@ namespace CMG.License.Services.Impls
                     }
                 i++;
             }
+            return logFile;
         }
     }
 }
