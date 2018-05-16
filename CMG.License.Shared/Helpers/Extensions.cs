@@ -3,24 +3,19 @@ using System.Globalization;
 
 namespace CMG.License.Shared.Helpers
 {
+    //"yyyy/MM/dd HH:mm:ss" for Out & In
+    //"yyyy/MM/dd HH:mm" for Deny 
     public static class Extensions
     {
-        public static DateTime GetFormattedDateTime(this string dateTimeStr)
+        public static DateTime GetFormattedDateTime(this string dateTimeStr,string format)
         {
             DateTime date = DateTime.MinValue;
             if (!string.IsNullOrEmpty(dateTimeStr))
-                if (!DateTime.TryParseExact(dateTimeStr,
-                                "yyyy/MM/dd HH:mm:ss",
+                DateTime.TryParseExact(dateTimeStr,
+                                format,
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None,
-                                out date))
-                {
-                    DateTime.TryParseExact(dateTimeStr,
-                                   "yyyy/MM/dd HH:mm",
-                                   CultureInfo.InvariantCulture,
-                                   DateTimeStyles.None,
-                                   out date);
-                }
+                                out date);
             return date;
         }
 
