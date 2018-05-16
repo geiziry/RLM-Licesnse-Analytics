@@ -1,6 +1,6 @@
-﻿using Prism.Commands;
+﻿using Akka.Util;
+using Prism.Commands;
 using Prism.Mvvm;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -16,23 +16,22 @@ namespace CMG.License.Shared.DataTypes
         public LogFile(string filePath)
         {
             this.filePath = filePath;
-            Products = new List<ProductDto>();
-            CheckIns = new List<CheckInDto>();
-            CheckOuts = new List<CheckOutDto>();
-            Denys = new List<DenyDto>();
+            Products = new ConcurrentSet<ProductDto>();
+            CheckIns = new ConcurrentSet<CheckInDto>();
+            CheckOuts = new ConcurrentSet<CheckOutDto>();
+            Denys = new ConcurrentSet<DenyDto>();
         }
 
-        public List<CheckInDto> CheckIns { get; set; }
-        public List<CheckOutDto> CheckOuts { get; set; }
-        public List<DenyDto> Denys { get; set; }
+        public ConcurrentSet<CheckInDto> CheckIns { get; set; }
+        public ConcurrentSet<CheckOutDto> CheckOuts { get; set; }
+        public ConcurrentSet<DenyDto> Denys { get; set; }
         public int Id { get; set; }
-        public Dictionary<int, List<string>> InUses { get; set; }
         public DelegateCommand OpenFileCmd
                     => openFileCmd ?? (openFileCmd = new DelegateCommand(() => Process.Start("notepad.exe", Path),
                     () => !string.IsNullOrEmpty(Path)));
 
         public string Path { get { return filePath; } }
-        public List<ProductDto> Products { get; set; }
+        public ConcurrentSet<ProductDto> Products { get; set; }
         public int ProgressInt
         {
             get { return progressInt; }

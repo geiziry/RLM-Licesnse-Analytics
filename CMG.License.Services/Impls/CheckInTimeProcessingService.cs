@@ -1,5 +1,4 @@
 ﻿using CMG.License.Shared.DataTypes;
-using CMG.License.Shared.Helpers;
 using System;
 using System.Linq;
 
@@ -7,38 +6,31 @@ namespace CMG.License.Services.Impls
 {
     internal static class CheckInTimeProcessingService
     {
-        public static DateTime GetCheckInTime(int checkOutKey, LogFile logFile)
+        public static DateTime GetCheckInTime(CheckOutDto checkOut, LogFile logFile)
         {
-            string strCheckInTime = string.Empty;
-            var checkOut = logFile.CheckOuts[checkOutKey];
-            var OutServerHandle = checkOut[CheckOut.server_handle];
-            var OutProduct = checkOut[CheckOut.product];
             if (logFile.CheckIns.Count > 0)
             {
                 var checkIn = logFile.CheckIns.FirstOrDefault(x => 
-                                                    x.Value[CheckIn.server_handle] == OutServerHandle
-                                                    && x.Value[CheckIn.product]== OutProduct
-                                                    && x.Key>checkOutKey).Value;
-                if (checkIn != null)
-                    strCheckInTime = $"{logFile.Year}/{checkIn[CheckIn.mm_dd]} {checkIn[CheckIn.time]}";
+                                                    x.ServerHandle == checkOut.ServerHandle
+                                                    && x.Product== checkOut.Product
+                                                    && x.TimeStamp>checkOut.TimeStamp);
+                if (checkIn.TimeStamp != default(DateTime))
+                    return checkIn.TimeStamp;
             }
-            return strCheckInTime.GetFormattedDateTime();
+            return default(DateTime);
         }
 
         public static DateTime GetCheckInTime(LogRptDto checkOutDto,string serverHandle, LogFile logFile)
         {
-            string strCheckInTime = string.Empty;
-            var OutServerHandle = serverHandle;
-            var OutProduct = checkOutDto.Product;
             if (logFile.CheckIns.Count > 0)
             {
-                var checkIn = logFile.CheckIns.Values.FirstOrDefault(x =>
-                                                    x[CheckIn.server_handle] == OutServerHandle
-                                                    && x[CheckIn.product] == OutProduct);
-                if (checkIn != null)
-                    strCheckInTime = $"{logFile.Year}/{checkIn[CheckIn.mm_dd]} {checkIn[CheckIn.time]}";
+                var checkIn = logFile.CheckIns.FirstOrDefault(x =>
+                                                    x.ServerHandle == serverHandle
+                                                    && x.Product == checkOutDto.Product);
+                if (checkIn.TimeStamp != default(DateTime))
+                    return checkIn.TimeStamp;
             }
-            return strCheckInTime.GetFormattedDateTime();
+            return default(DateTime);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace CMG.License.UI.Actors
             viewModel.IsGeneratingReport = true;
 
             Source.From(viewModel.LogFiles)
-                .Select(logFile => logFilesParsingService.ParseLogFileEvents(logFile))
+                .SelectAsync(4,logFilesParsingService.ParseLogFileEventsAsync)
                 .Async()
                 .RunForeach(x =>
                 {
@@ -50,22 +50,22 @@ namespace CMG.License.UI.Actors
 
             //Try Graph Dsl
 
-            var source = Source.From(viewModel.LogFiles);
+            //var source = Source.From(viewModel.LogFiles);
 
 
-            var logFileParse = Flow.Create<LogFile>()
-                    .Select(logFile => logFilesParsingService.ParseLogFileEvents(logFile));
-            var graph = Flow.FromGraph(GraphDsl.Create(b =>
-            {
-                var dispatchLogFile = b.Add(new Balance<LogFile>(2));
+            //var logFileParse = Flow.Create<LogFile>()
+            //        .Select(logFile => logFilesParsingService.ParseLogFileEvents(logFile));
+            //var graph = Flow.FromGraph(GraphDsl.Create(b =>
+            //{
+            //    var dispatchLogFile = b.Add(new Balance<LogFile>(2));
 
-            }));
-            var logFileGenerateRpt = Flow.Create<LogFile,Akka.NotUsed>().
-                .Select(logFile =>
-                {
-                    logFileRptGeneratorService.GenerateReport(logFile);
-                    viewModel.OverallProgress++;
-                });
+            //}));
+            //var logFileGenerateRpt = Flow.Create<LogFile,Akka.NotUsed>().
+            //    .Select(logFile =>
+            //    {
+            //        logFileRptGeneratorService.GenerateReport(logFile);
+            //        viewModel.OverallProgress++;
+            //    });
 
         }
     }

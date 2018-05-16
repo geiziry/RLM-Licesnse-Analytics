@@ -1,6 +1,5 @@
 ﻿using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
-using CMG.License.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,29 +30,26 @@ namespace CMG.License.Services.Impls
             if (InUseCheckOuts.Any())
                 GetCheckInforInUseOuts(logFile);
             int i = 0;
-            foreach (var checkOutKey in logFile.CheckOuts.Keys)
+            foreach (var checkOut in logFile.CheckOuts)
             {
                 i++;
-                logFile.ProgressInt = i*100 / logFile.CheckOuts.Count;
-                var checkOut = logFile.CheckOuts[checkOutKey];
-                var product = checkOut[CheckOut.product];
-                var server_handle = checkOut[CheckOut.server_handle];
+                logFile.ProgressInt = i * 100 / logFile.CheckOuts.Count;
                 var logRptDto = new LogRptDto
                 {
-                    Product = product,
-                    Version = checkOut[CheckOut.version],
-                    UserName = checkOut[CheckOut.user],
-                    HostName = checkOut[CheckOut.host],
-                    InstalledCount = Int32.Parse(GetProductInstalledLicCount(product, logFile)),
-                    InUse = Int32.Parse(checkOut[CheckOut.cur_use]),
-                    OutTime = GetOutTime(checkOutKey, logFile),
-                    InTime = CheckInTimeProcessingService.GetCheckInTime(checkOutKey, logFile),
-                    RequestTime = RequestTimeProcessingService.GetStrRequestTime(checkOutKey, logFile)
+                    Product = checkOut.Product,
+                    Version = checkOut.Version,
+                    UserName = checkOut.User,
+                    HostName = checkOut.Host,
+                    InstalledCount = GetProductInstalledLicCount(checkOut.Product, logFile),
+                    InUse = checkOut.CurrentInUse,
+                    OutTime = checkOut.TimeStamp,
+                    //InTime = CheckInTimeProcessingService.GetCheckInTime(checkOut, logFile),
+                    //RequestTime = RequestTimeProcessingService.GetStrRequestTime(checkOut, logFile)
                 };
                 if (logRptDto.InTime > DateTime.MinValue)
                     report.Add(logRptDto);
-                else
-                    InUseCheckOuts[server_handle] = logRptDto;
+                //else
+                //    InUseCheckOuts[server_handle] = logRptDto;
             }
         }
 
@@ -62,7 +58,7 @@ namespace CMG.License.Services.Impls
             foreach (var server_handle in InUseCheckOuts.Keys.ToList())
             {
                 var noCheckInlogRptDto = InUseCheckOuts[server_handle];
-                var InTime = CheckInTimeProcessingService.GetCheckInTime(noCheckInlogRptDto,server_handle, logFile);
+                var InTime = CheckInTimeProcessingService.GetCheckInTime(noCheckInlogRptDto, server_handle, logFile);
                 if (InTime > DateTime.MinValue)
                 {
                     noCheckInlogRptDto.InTime = InTime;
@@ -77,20 +73,13 @@ namespace CMG.License.Services.Impls
             return report;
         }
 
-        private DateTime GetOutTime(int checkOutKey, LogFile logFile)
+        private int GetProductInstalledLicCount(string productName, LogFile logFile)
         {
-            var checkout = logFile.CheckOuts[checkOutKey];
-            string strCheckOutTime = $"{logFile.Year}/{checkout[CheckOut.mm_dd]} {checkout[CheckOut.time]}";
-            return strCheckOutTime.GetFormattedDateTime();
-        }
-
-        private string GetProductInstalledLicCount(string productName, LogFile logFile)
-        {
-            string licCount = string.Empty;
+            int licCount = 0;
             if (logFile.Products.Count > 0)
             {
-                var product = logFile.Products.Values.FirstOrDefault(x => x[Product.name] == productName);
-                licCount = product?[Product.count];
+                var product = logFile.Products.FirstOrDefault(x => x.Name == productName);
+                    licCount = product.InstalledCount;
             }
             return licCount;
         }
