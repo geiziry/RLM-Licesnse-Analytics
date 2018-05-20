@@ -1,6 +1,4 @@
-﻿using Akka;
-using Akka.Actor;
-using Akka.IO;
+﻿using Akka.Actor;
 using Akka.Streams;
 using Akka.Streams.Dsl;
 using CMG.License.Services.Interfaces;
@@ -32,40 +30,9 @@ namespace CMG.License.Services.Impls
             var startLine = lines.FirstOrDefault(l => l.StartsWith(LogEvents.START.ToString()));
             logFile.Start = ParseStart(startLine);
 
-
-            #region MyRegion
-
-            var delimiter = ByteString.FromString("\r\n");
-            var getLines =
-                Flow.Create<ByteString>()
-                .Via(Framing.Delimiter(delimiter, 256, true))
-                .Select(bytes => bytes.ToString());
-
-            var source1 = Source.Single(logFile.Path);
-            List<object> t=new List<object>();
-               await source1
-                .Select(fileName => FileIO.FromFile(new FileInfo(fileName))
-                .Via(getLines)
-                .MapMaterializedValue(_=>NotUsed.Instance))
-                .RunForeach(l => t.Add(l), actorSystem.Materializer());
-
-            //await Source.From(lines)
-            // .MergeMany(100, fileName =>
-            //  FileIO.FromFile(new FileInfo(fileName))
-            //  .Via(getLines)
-            //  .MapMaterializedValue(_ => NotUsed.Instance))
-            //  .RunForeach(x => x.First(), actorSystem.Materializer());
-            //.RunAggregate(0, (x, o) => x, Context.Materializer());
-
-            #endregion
-
             var source = Source.From(lines);
             await source.RunForeach(l => ParseLine(logFile, l), actorSystem.Materializer());
-            //var flow = Flow.Create<string, LogFile>();
-            //Flow.Create<string>().Where(x=>x=="").GroupBy(30,x=>x).Aggregate("",(x,o)=>x).
 
-            //foreach (var line in lines)
-            //    ParseLine(logFile, line);
             return logFile;
         }
 

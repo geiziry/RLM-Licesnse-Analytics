@@ -13,7 +13,7 @@ namespace CMG.License.Services.Impls
                 var checkIn = logFile.CheckIns.FirstOrDefault(x => 
                                                     x.ServerHandle == checkOut.ServerHandle
                                                     && x.Product== checkOut.Product
-                                                    && x.TimeStamp>checkOut.TimeStamp);
+                                                    && x.TimeStamp>=checkOut.TimeStamp);
                 if (checkIn.TimeStamp != default(DateTime))
                     return checkIn.TimeStamp;
             }

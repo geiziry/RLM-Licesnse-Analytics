@@ -1,15 +1,11 @@
-﻿using Akka;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.DI.Core;
-using Akka.IO;
 using Akka.Streams;
 using Akka.Streams.Dsl;
 using CMG.License.Services.Interfaces;
 using CMG.License.Shared.AkkaHelpers;
 using CMG.License.Shared.DataTypes;
 using CMG.License.UI.ViewModels;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace CMG.License.UI.Actors
@@ -38,44 +34,35 @@ namespace CMG.License.UI.Actors
             viewModel.OverallProgress = 0;
             viewModel.IsGeneratingReport = true;
 
-
-           
-
             await Source.From(viewModel.LogFiles)
-                .SelectAsync(4, logFilesParsingService.ParseLogFileEventsAsync)
+                 .SelectAsync(30, logFilesParsingService.ParseLogFileEventsAsync)
+                 .RunWith(Sink.Ignore<LogFile>(), Context.Materializer());
 
-                .Async()
-                .RunForeach(x =>
-                {
-                    logFileRptGeneratorService.GenerateReport(x);
-                    viewModel.OverallProgress++;
-                }, Context.Materializer())
-                .ContinueWith((x) =>
-                {
-                    var reportRows = logFileRptGeneratorService.GetReportRows();
-                    logFilesExcelProviderActor.Tell(reportRows);
-                    viewModel.IsGeneratingReport = false;
-                });
+            foreach (var logFile in viewModel.LogFiles)
+            {
+                logFileRptGeneratorService.GenerateReport(logFile);
+                viewModel.OverallProgress++;
+            }
 
-            //Try Graph Dsl
-
-            //var source = Source.From(viewModel.LogFiles);
+            var reportRows = logFileRptGeneratorService.GetReportRows();
+            logFilesExcelProviderActor.Tell(reportRows);
+            viewModel.IsGeneratingReport = false;
 
 
-            //var logFileParse = Flow.Create<LogFile>()
-            //        .Select(logFile => logFilesParsingService.ParseLogFileEvents(logFile));
-            //var graph = Flow.FromGraph(GraphDsl.Create(b =>
-            //{
-            //    var dispatchLogFile = b.Add(new Balance<LogFile>(2));
-
-            //}));
-            //var logFileGenerateRpt = Flow.Create<LogFile,Akka.NotUsed>().
-            //    .Select(logFile =>
+            //await Source.From(viewModel.LogFiles)
+            //    .SelectAsync(20, logFilesParsingService.ParseLogFileEventsAsync)
+            //    .Async()
+            //    .RunForeach(x =>
             //    {
-            //        logFileRptGeneratorService.GenerateReport(logFile);
+            //        logFileRptGeneratorService.GenerateReport(x);
             //        viewModel.OverallProgress++;
+            //    }, Context.Materializer())
+            //    .ContinueWith((x) =>
+            //    {
+            //        var reportRows = logFileRptGeneratorService.GetReportRows();
+            //        logFilesExcelProviderActor.Tell(reportRows);
+            //        viewModel.IsGeneratingReport = false;
             //    });
-
         }
     }
 }
