@@ -30,7 +30,7 @@ namespace CMG.License.Services.Impls
             rowDataSheet.Cells[2, 10, dataRange.End.Row, 10].Style.Numberformat.Format = "hh:mm:ss";
             rowDataSheet.Cells[2, 11, dataRange.End.Row, 11].Style.Numberformat.Format = "hh:mm:ss";
 
-            dataRange.AutoFitColumns();
+            //dataRange.AutoFitColumns();
 
             var wsPivot = xlsFile.Workbook.Worksheets.Add("PivotSimple");
             var pivotTable = wsPivot.PivotTables.Add(wsPivot.Cells["A1"], dataRange, "testPivotTbl");

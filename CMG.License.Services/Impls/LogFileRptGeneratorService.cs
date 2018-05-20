@@ -46,7 +46,7 @@ namespace CMG.License.Services.Impls
                     //InTime = CheckInTimeProcessingService.GetCheckInTime(checkOut, logFile),
                     //RequestTime = RequestTimeProcessingService.GetStrRequestTime(checkOut, logFile)
                 };
-                if (logRptDto.InTime > DateTime.MinValue)
+                //if (logRptDto.InTime > DateTime.MinValue)
                     report.Add(logRptDto);
                 //else
                 //    InUseCheckOuts[server_handle] = logRptDto;

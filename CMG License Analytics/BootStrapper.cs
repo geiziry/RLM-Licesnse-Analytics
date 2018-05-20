@@ -16,8 +16,8 @@ namespace CMG.License.Analytics
         {
 
             builder.RegisterModule<UiModuleRegistery>();
-            //var logFilesParsingService = new LogFilesParsingService();
-            builder.RegisterType<LogFilesParsingService>().As<ILogFilesParsingService>();
+            var logFilesParsingService = new LogFilesParsingService(App.AppActorSystem);
+            builder.RegisterInstance(logFilesParsingService).As<ILogFilesParsingService>();
             var logFileRptGeneratorService = new LogFileRptGeneratorService();
             builder.RegisterInstance(logFileRptGeneratorService).As<ILogFileRptGeneratorService>();
             var logFilesExcelProviderService = new LogFilesExcelProviderService();

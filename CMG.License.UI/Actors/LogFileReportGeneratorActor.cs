@@ -1,11 +1,16 @@
-﻿using Akka.Actor;
+﻿using Akka;
+using Akka.Actor;
 using Akka.DI.Core;
+using Akka.IO;
 using Akka.Streams;
 using Akka.Streams.Dsl;
 using CMG.License.Services.Interfaces;
 using CMG.License.Shared.AkkaHelpers;
 using CMG.License.Shared.DataTypes;
 using CMG.License.UI.ViewModels;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace CMG.License.UI.Actors
 {
@@ -23,18 +28,22 @@ namespace CMG.License.UI.Actors
                                                                         ActorPaths.logFilesExcelProviderActor.Name);
             this.logFileRptGeneratorService = logFileRptGeneratorService;
             this.logFilesParsingService = logFilesParsingService;
-            Receive<OpenLogFileViewModel>(viewModel => GenerateReportAsync(viewModel));
+            Receive<OpenLogFileViewModel>(async viewModel => await GenerateReportAsync(viewModel));
         }
 
-        private void GenerateReportAsync(OpenLogFileViewModel viewModel)
+        private async Task GenerateReportAsync(OpenLogFileViewModel viewModel)
         {
             logFileRptGeneratorService.InitializeReport();
             //initialize progress
             viewModel.OverallProgress = 0;
             viewModel.IsGeneratingReport = true;
 
-            Source.From(viewModel.LogFiles)
-                .SelectAsync(4,logFilesParsingService.ParseLogFileEventsAsync)
+
+           
+
+            await Source.From(viewModel.LogFiles)
+                .SelectAsync(4, logFilesParsingService.ParseLogFileEventsAsync)
+
                 .Async()
                 .RunForeach(x =>
                 {
