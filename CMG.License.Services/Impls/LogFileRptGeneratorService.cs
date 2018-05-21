@@ -1,6 +1,7 @@
 ﻿using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace CMG.License.Services.Impls
     /// </summary>
     public class LogFileRptGeneratorService : ILogFileRptGeneratorService
     {
-        private Dictionary<string, LogRptDto> InUseCheckOuts;
+        private ConcurrentDictionary<string, LogRptDto> InUseCheckOuts;
         private List<LogRptDto> report;
 
         public void InitializeReport()
@@ -27,8 +28,8 @@ namespace CMG.License.Services.Impls
 
         public void GenerateReport(LogFile logFile)
         {
-            if (InUseCheckOuts.Any())
-                GetCheckInforInUseOuts(logFile);
+            //if (InUseCheckOuts.Any())
+            //    GetCheckInforInUseOuts(logFile);
             int i = 0;
             foreach (var checkOut in logFile.CheckOuts)
             {
@@ -53,17 +54,20 @@ namespace CMG.License.Services.Impls
             }
         }
 
-        private void GetCheckInforInUseOuts(LogFile logFile)
+        public void GetCheckInforInUseOuts(LogFile logFile)
         {
             foreach (var server_handle in InUseCheckOuts.Keys.ToList())
             {
                 var noCheckInlogRptDto = InUseCheckOuts[server_handle];
-                var InTime = CheckInTimeProcessingService.GetCheckInTime(noCheckInlogRptDto, server_handle, logFile);
-                if (InTime > DateTime.MinValue)
+                if (logFile.StartEvent.TimeStamp > noCheckInlogRptDto.OutTime)
                 {
-                    noCheckInlogRptDto.InTime = InTime;
-                    report.Add(noCheckInlogRptDto);
-                    InUseCheckOuts.Remove(server_handle);
+                    var InTime = CheckInTimeProcessingService.GetCheckInTime(noCheckInlogRptDto, server_handle, logFile);
+                    if (InTime > DateTime.MinValue)
+                    {
+                        noCheckInlogRptDto.InTime = InTime;
+                        report.Add(noCheckInlogRptDto);
+                        InUseCheckOuts.TryRemove(server_handle,out LogRptDto logRptDto);
+                    }
                 }
             }
         }
@@ -79,7 +83,7 @@ namespace CMG.License.Services.Impls
             if (logFile.Products.Count > 0)
             {
                 var product = logFile.Products.FirstOrDefault(x => x.Name == productName);
-                    licCount = product.InstalledCount;
+                licCount = product.InstalledCount;
             }
             return licCount;
         }

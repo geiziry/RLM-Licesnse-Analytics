@@ -4,6 +4,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table.PivotTable;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace CMG.License.Services.Impls
@@ -27,8 +28,8 @@ namespace CMG.License.Services.Impls
             rowDataSheet.Cells[2, 1, dataRange.End.Row, 1].Style.Numberformat.Format = "mm/dd/yy hh:mm";
             rowDataSheet.Cells[2, 2, dataRange.End.Row, 2].Style.Numberformat.Format = "mm/dd/yy hh:mm";
             rowDataSheet.Cells[2, 3, dataRange.End.Row, 3].Style.Numberformat.Format = "mm/dd/yy hh:mm";
-            rowDataSheet.Cells[2, 10, dataRange.End.Row, 10].Style.Numberformat.Format = "hh:mm:ss";
-            rowDataSheet.Cells[2, 11, dataRange.End.Row, 11].Style.Numberformat.Format = "hh:mm:ss";
+            rowDataSheet.Cells[2, 10, dataRange.End.Row, 10].Style.Numberformat.Format = "[h]:mm:ss";
+            rowDataSheet.Cells[2, 11, dataRange.End.Row, 11].Style.Numberformat.Format = "[h]:mm:ss";
 
             dataRange.AutoFitColumns();
 

@@ -34,20 +34,20 @@ namespace CMG.License.UI.Actors
             viewModel.OverallProgress = 0;
             viewModel.IsGeneratingReport = true;
 
+            var parseLogFiles = Flow.Create<LogFile>().SelectAsyncUnordered(30, logFilesParsingService.ParseLogFileEventsAsync);
+            var generateCheckOuts=Flow.Create<LogFile>().SelectAsyncUnordered()
+
             await Source.From(viewModel.LogFiles)
                  .SelectAsync(30, logFilesParsingService.ParseLogFileEventsAsync)
-                 .RunWith(Sink.Ignore<LogFile>(), Context.Materializer());
-
-            foreach (var logFile in viewModel.LogFiles)
-            {
-                logFileRptGeneratorService.GenerateReport(logFile);
-                viewModel.OverallProgress++;
-            }
+                 .RunWith(Sink.ForEach<LogFile>(logFile =>
+                 {
+                     logFileRptGeneratorService.GenerateReport(logFile);
+                     viewModel.OverallProgress++;
+                 }), Context.Materializer());
 
             var reportRows = logFileRptGeneratorService.GetReportRows();
             logFilesExcelProviderActor.Tell(reportRows);
             viewModel.IsGeneratingReport = false;
-
 
             //await Source.From(viewModel.LogFiles)
             //    .SelectAsync(20, logFilesParsingService.ParseLogFileEventsAsync)

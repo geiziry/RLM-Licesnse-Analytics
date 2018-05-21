@@ -47,9 +47,14 @@ namespace CMG.License.Shared.DataTypes
         public DateTime TimeStamp { get; set; }
     }
 
+    public struct ShutdownDto
+    {
+        public DateTime TimeStamp { get; set; }
+    }
+
     #region enums
 
-    public enum LogEvents { PRODUCT, IN, OUT, DENY, START, INUSE }
+    public enum LogEvents { PRODUCT, IN, OUT, DENY, START, INUSE,SHUTDOWN}
 
     public static class CheckIn
     {
@@ -89,5 +94,9 @@ namespace CMG.License.Shared.DataTypes
         public const int server_name = 1, date = 2, time = 3;
     }
 
+    public static class Shutdown
+    {
+        public const int user = 1, hostid = 2, mm_dd = 3, time = 4;
+    }
     #endregion enums
 }

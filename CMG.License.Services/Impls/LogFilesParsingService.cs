@@ -11,33 +11,25 @@ namespace CMG.License.Services.Impls
 {
     public class LogFilesParsingService : ILogFilesParsingService
     {
+        private readonly IActorRefFactory actorSystem;
+
         public LogFilesParsingService(IActorRefFactory actorSystem)
         {
             this.actorSystem = actorSystem;
         }
-
-        private readonly IActorRefFactory actorSystem;
-
         public async Task<LogFile> ParseLogFileEventsAsync(LogFile logFile)
         {
             if (!logFile.Exists())
                 return null;
             var lines = File.ReadAllLines(logFile.Path);
-            var startLine = lines.FirstOrDefault(l => l.StartsWith(LogEvents.START.ToString()));
+            var startLine = lines.FirstOrDefault(l => 
+                        l.StartsWith(LogEvents.START.ToString()));
             logFile.ParseStart(startLine);
             logFile.InitializeProgress(lines);
-            //var source = Source.From(lines);
             await Source.From(lines)
                 .SelectAsyncUnordered(30, logFile.ParseLine)
                 .RunWith(Sink.Ignore<bool>(), actorSystem.Materializer());
-            //await source.RunForeach(l =>
-            //{
-            //    logFile.ParseLine(l);
-            //    logFile.ProgressInt += (100d/ lines.Count());
-            //}, actorSystem.Materializer());
-
             return logFile;
         }
-
     }
 }

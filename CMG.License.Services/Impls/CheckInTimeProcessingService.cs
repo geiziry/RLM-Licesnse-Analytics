@@ -13,7 +13,9 @@ namespace CMG.License.Services.Impls
                 var checkIn = logFile.CheckIns.FirstOrDefault(x => 
                                                     x.ServerHandle == checkOut.ServerHandle
                                                     && x.Product== checkOut.Product
-                                                    && x.TimeStamp>=checkOut.TimeStamp);
+                                                    && x.User==checkOut.User
+                                                    && x.TimeStamp>=checkOut.TimeStamp
+                                                    && x.Host==checkOut.Host);
                 if (checkIn.TimeStamp != default(DateTime))
                     return checkIn.TimeStamp;
             }
@@ -26,7 +28,10 @@ namespace CMG.License.Services.Impls
             {
                 var checkIn = logFile.CheckIns.FirstOrDefault(x =>
                                                     x.ServerHandle == serverHandle
-                                                    && x.Product == checkOutDto.Product);
+                                                    && x.Product == checkOutDto.Product
+                                                    && x.User==checkOutDto.UserName
+                                                    && x.TimeStamp >=checkOutDto.OutTime
+                                                    && x.Host==checkOutDto.HostName);
                 if (checkIn.TimeStamp != default(DateTime))
                     return checkIn.TimeStamp;
             }
