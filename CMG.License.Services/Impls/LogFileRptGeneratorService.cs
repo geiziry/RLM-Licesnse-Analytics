@@ -33,7 +33,7 @@ namespace CMG.License.Services.Impls
             foreach (var checkOut in logFile.CheckOuts)
             {
                 i++;
-                logFile.ProgressInt = i * 100 / logFile.CheckOuts.Count;
+                //logFile.ProgressInt = i * 100 / logFile.CheckOuts.Count;
                 var logRptDto = new LogRptDto
                 {
                     Product = checkOut.Product,
