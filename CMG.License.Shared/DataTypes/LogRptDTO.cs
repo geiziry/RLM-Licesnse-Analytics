@@ -2,6 +2,7 @@
 
 namespace CMG.License.Shared.DataTypes
 {
+    public class EpplusIgnoreAttribute : Attribute { }
     public class LogRptDto
     {
         public DateTime RequestTime { get; set; }
@@ -15,5 +16,7 @@ namespace CMG.License.Shared.DataTypes
         public int InUse { get; set; }
         public TimeSpan WaitTime { get { return OutTime - RequestTime; } }
         public TimeSpan Duration { get { return InTime - OutTime; } }
+        [EpplusIgnore]
+        public string ServerHandle { get; set; }
     }
 }

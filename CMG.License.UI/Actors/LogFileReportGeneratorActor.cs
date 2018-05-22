@@ -2,10 +2,12 @@
 using Akka.DI.Core;
 using Akka.Streams;
 using Akka.Streams.Dsl;
+using Akka.Util;
 using CMG.License.Services.Interfaces;
 using CMG.License.Shared.AkkaHelpers;
 using CMG.License.Shared.DataTypes;
 using CMG.License.UI.ViewModels;
+using System;
 using System.Threading.Tasks;
 
 namespace CMG.License.UI.Actors
@@ -33,36 +35,34 @@ namespace CMG.License.UI.Actors
             //initialize progress
             viewModel.OverallProgress = 0;
             viewModel.IsGeneratingReport = true;
+            var logRptDtoToCheck = new ConcurrentSet<LogRptDto>();
 
-            var parseLogFiles = Flow.Create<LogFile>().SelectAsyncUnordered(30, logFilesParsingService.ParseLogFileEventsAsync);
-            var generateCheckOuts=Flow.Create<LogFile>().SelectAsyncUnordered()
+            //await Source.From(viewModel.LogFiles)
+            //     .SelectAsyncUnordered(int.MaxValue, logFilesParsingService.ParseLogFileEventsAsync)//30
+            //     .SelectAsyncUnordered(int.MaxValue, logFileRptGeneratorService.GenerateReport)//20
+            //     .SelectMany(x => x)
+            //     .RunWith(Sink.ForEachParallel<LogRptDto>(20,l=>logRptDtoToCheck.TryAdd(l)), Context.Materializer());
+
+            //var t = new ConcurrentSet<bool>();
+            //await Source.From(logRptDtoToCheck)
+            //     .SelectAsyncUnordered(int.MaxValue, l => logFileRptGeneratorService.GetCheckInforInUseOuts(l, viewModel.LogFiles))
+            //     .Async()
+            //     .RunWith(Sink.ForEach<bool>(b=>t.TryAdd(b)), Context.Materializer());
+
 
             await Source.From(viewModel.LogFiles)
-                 .SelectAsync(30, logFilesParsingService.ParseLogFileEventsAsync)
-                 .RunWith(Sink.ForEach<LogFile>(logFile =>
-                 {
-                     logFileRptGeneratorService.GenerateReport(logFile);
-                     viewModel.OverallProgress++;
-                 }), Context.Materializer());
+                 .SelectAsyncUnordered(int.MaxValue, logFilesParsingService.ParseLogFileEventsAsync)//30
+                 .SelectAsyncUnordered(int.MaxValue, logFileRptGeneratorService.GenerateReport)//20
+                 .SelectMany(x => x)
+                 .SelectAsyncUnordered(int.MaxValue, l => logFileRptGeneratorService.GetCheckInforInUseOuts(l, viewModel.LogFiles))
+                 .RunWith(Sink.Ignore<bool>(), Context.Materializer());
+
+
+            //         viewModel.OverallProgress++;
 
             var reportRows = logFileRptGeneratorService.GetReportRows();
             logFilesExcelProviderActor.Tell(reportRows);
             viewModel.IsGeneratingReport = false;
-
-            //await Source.From(viewModel.LogFiles)
-            //    .SelectAsync(20, logFilesParsingService.ParseLogFileEventsAsync)
-            //    .Async()
-            //    .RunForeach(x =>
-            //    {
-            //        logFileRptGeneratorService.GenerateReport(x);
-            //        viewModel.OverallProgress++;
-            //    }, Context.Materializer())
-            //    .ContinueWith((x) =>
-            //    {
-            //        var reportRows = logFileRptGeneratorService.GetReportRows();
-            //        logFilesExcelProviderActor.Tell(reportRows);
-            //        viewModel.IsGeneratingReport = false;
-            //    });
         }
     }
 }

@@ -29,6 +29,7 @@ namespace CMG.License.Shared.DataTypes
             CheckIns = new ConcurrentSet<CheckInDto>();
             CheckOuts = new ConcurrentSet<CheckOutDto>();
             Denys = new ConcurrentSet<DenyDto>();
+            Shutdowns = new ConcurrentSet<ShutdownDto>();
         }
 
         public ConcurrentSet<CheckInDto> CheckIns { get; set; }

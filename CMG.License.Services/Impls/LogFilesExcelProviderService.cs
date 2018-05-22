@@ -1,5 +1,6 @@
 ﻿using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
+using CMG.License.Shared.Helpers;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table.PivotTable;
@@ -18,12 +19,11 @@ namespace CMG.License.Services.Impls
 
         public void GenerateRawDataSheet(List<LogRptDto> ReportRows, ExcelPackage xlsFile)
         {
-            var rowDataSheet = xlsFile.Workbook.Worksheets.Add("Raw Data2");
-            var dataRange = rowDataSheet.Cells["A1"].LoadFromCollection(
+            var rowDataSheet = xlsFile.Workbook.Worksheets.Add("Raw Data");
+            var dataRange = rowDataSheet.Cells["A1"].LoadFromCollectionFiltered(
                 from r in ReportRows
                 orderby r.OutTime
-                select r,
-                true, OfficeOpenXml.Table.TableStyles.Light13);
+                select r);
             //Format table
             rowDataSheet.Cells[2, 1, dataRange.End.Row, 1].Style.Numberformat.Format = "mm/dd/yy hh:mm";
             rowDataSheet.Cells[2, 2, dataRange.End.Row, 2].Style.Numberformat.Format = "mm/dd/yy hh:mm";

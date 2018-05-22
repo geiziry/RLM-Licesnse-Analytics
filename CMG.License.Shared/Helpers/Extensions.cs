@@ -1,5 +1,10 @@
-﻿using System;
+﻿using CMG.License.Shared.DataTypes;
+using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace CMG.License.Shared.Helpers
 {
@@ -19,5 +24,17 @@ namespace CMG.License.Shared.Helpers
             return date;
         }
 
+        public static ExcelRangeBase LoadFromCollectionFiltered<T>(this ExcelRangeBase @this, IEnumerable<T> collection) where T : class
+        {
+            MemberInfo[] membersToInclude = typeof(T)
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => !Attribute.IsDefined(p, typeof(EpplusIgnoreAttribute)))
+                .ToArray();
+
+            return @this.LoadFromCollection<T>(collection, true,
+                OfficeOpenXml.Table.TableStyles.Light13,
+                BindingFlags.Instance | BindingFlags.Public,
+                membersToInclude);
+        }
     }
 }

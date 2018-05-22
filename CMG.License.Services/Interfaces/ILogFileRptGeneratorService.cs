@@ -1,14 +1,18 @@
-﻿using CMG.License.Shared.DataTypes;
+﻿using Akka.Util;
+using CMG.License.Shared.DataTypes;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CMG.License.Services.Interfaces
 {
     public interface ILogFileRptGeneratorService
     {
-        void GenerateReport(LogFile logFile);
+        Task<ConcurrentSet<LogRptDto>> GenerateReport(LogFile logFile);
 
-        void InitializeReport();
+        Task<bool> GetCheckInforInUseOuts(LogRptDto logRptDto,IEnumerable<LogFile> logFiles);
 
         List<LogRptDto> GetReportRows();
+
+        void InitializeReport();
     }
 }

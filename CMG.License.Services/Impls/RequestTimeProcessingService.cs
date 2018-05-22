@@ -1,4 +1,5 @@
-﻿using CMG.License.Shared.DataTypes;
+﻿using Akka.Util;
+using CMG.License.Shared.DataTypes;
 using System;
 using System.Linq;
 
@@ -6,20 +7,20 @@ namespace CMG.License.Services.Impls
 {
     internal static class RequestTimeProcessingService
     {
-        public static DateTime GetStrRequestTime(CheckOutDto checkOut, LogFile logFile)
+        public static DateTime GetStrRequestTime(CheckOutDto checkOut, ConcurrentSet<DenyDto> denys, ConcurrentSet<CheckOutDto> checkOuts)
         {
-            if (!logFile.Denys.Any())
+            if (!denys.Any())
                 return checkOut.TimeStamp;
             else
             {
-                var userDenialsForProduct = logFile.Denys.Where(x =>
+                var userDenialsForProduct = denys.Where(x =>
                                       x.User == checkOut.User
                                       && x.Product == checkOut.Product);
 
                 if (userDenialsForProduct.Any())
                 {
                     var lastCheckOutBeforCurrForProd
-                        = logFile.CheckOuts.Where(x =>
+                        = checkOuts.Where(x =>
                                     x.TimeStamp <= checkOut.TimeStamp
                                     && x.Product == checkOut.Product)
                                     .OrderBy(x => x.TimeStamp).LastOrDefault();
