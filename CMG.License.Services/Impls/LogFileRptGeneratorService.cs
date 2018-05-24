@@ -27,7 +27,6 @@ namespace CMG.License.Services.Impls
     /// </summary>
     public class LogFileRptGeneratorService : ILogFileRptGeneratorService
     {
-        private ConcurrentDictionary<string, LogRptDto> InUseCheckOuts;
         private ConcurrentSet<LogRptDto> report;
 
         private readonly IActorRefFactory actorSystem;
@@ -39,7 +38,6 @@ namespace CMG.License.Services.Impls
 
         public void InitializeReport()
         {
-            InUseCheckOuts = new ConcurrentDictionary<string, LogRptDto>();
             report = new ConcurrentSet<LogRptDto>();
         }
 
@@ -57,6 +55,8 @@ namespace CMG.License.Services.Impls
                 }), actorSystem.Materializer());
             return withoutCheckin;
         }
+
+
 
         private Task<LogRptDto> GetLogRptDto(CheckOutDto checkOut, LogFile logFile)
         {
