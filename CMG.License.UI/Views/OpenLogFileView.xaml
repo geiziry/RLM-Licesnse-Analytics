@@ -67,13 +67,12 @@
                 BorderBrush="#D5DFE5"
                 BorderThickness="1"
                 Margin="10">
-            <ScrollViewer>
-                <ItemsControl x:Name="logFilesList"
+                <ListView x:Name="logFilesList"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       ItemTemplate="{DynamicResource progressListItem}"
+                          ItemContainerStyle="{DynamicResource itemContainerStyle}"
                       ItemsSource="{Binding LogFiles}">
-                </ItemsControl>
-            </ScrollViewer>
+                </ListView>
         </Border>
     </DockPanel>
 </Grid>

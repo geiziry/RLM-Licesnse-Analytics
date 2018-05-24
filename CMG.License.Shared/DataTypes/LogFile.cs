@@ -43,6 +43,7 @@ namespace CMG.License.Shared.DataTypes
                     () => !string.IsNullOrEmpty(Path)));
 
         public string Path { get { return filePath; } }
+        public string FormattedPath { get { return $".\\{System.IO.Path.GetFileName(filePath)}"; } }
         public ConcurrentSet<ProductDto> Products { get; set; }
 
         public double ProgressInt
@@ -62,7 +63,7 @@ namespace CMG.License.Shared.DataTypes
         public void InitializeProgress(string[] lines)
         {
             ProgressInt = 0;
-            progressInc = 100d / lines.Count();
+            progressInc = (100.0 / lines.Count());
         }
 
         #region Parsing
@@ -97,9 +98,6 @@ namespace CMG.License.Shared.DataTypes
                         case LogEvents.END:
                             return ParseEnd(tokens);
 
-                        //case LogEvents.START:
-                        //    return ParseStart(tokens);
-
                         default:
                             return false;
                     }
@@ -108,17 +106,6 @@ namespace CMG.License.Shared.DataTypes
                 return false;
             });
         }
-
-        //public bool ParseStart(List<string> tokens)
-        //{
-        //    StartEvent = new StartDto
-        //    {
-        //        ServerName = tokens[Start.server_name],
-        //        TimeStamp = $"{tokens[Start.date]} {tokens[Start.time]}"
-        //                         .GetFormattedDateTime("MM/dd/yyyy HH:mm:ss")
-        //    };
-        //    return true;
-        //}
 
         public bool ParseStart(string startLine)
         {

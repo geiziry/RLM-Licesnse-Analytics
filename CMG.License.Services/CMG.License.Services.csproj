@@ -88,7 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impls\CheckInTimeProcessingService.cs" />
+    <Compile Include="Impls\DenialsRptGeneratorService.cs" />
     <Compile Include="Impls\RequestTimeProcessingService.cs" />
+    <Compile Include="Interfaces\IDenialsRptGeneratorService.cs" />
     <Compile Include="Interfaces\ILogFileRptGeneratorService.cs" />
     <Compile Include="Impls\LogFileRptGeneratorService.cs" />
     <Compile Include="Impls\LogFilesExcelProviderService.cs" />

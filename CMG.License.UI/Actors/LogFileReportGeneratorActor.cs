@@ -31,7 +31,7 @@ namespace CMG.License.UI.Actors
         private void GenerateReportAsync(OpenLogFileViewModel viewModel)
         {
             logFileRptGeneratorService.InitializeReport();
-            //initialize progress
+
             viewModel.OverallProgress = 0;
             viewModel.IsGeneratingReport = true;
 
@@ -51,7 +51,7 @@ namespace CMG.License.UI.Actors
                 var reportGen = Flow.Create<LogFile>()
                                 .SelectAsyncUnordered(int.MaxValue, logFileRptGeneratorService.GenerateReport)
                                 .SelectMany(x => x);
-                //TODO: wait until parsing is complete
+
                 var getCheckIns = Flow.Create<LogRptDto>()
                                 .SelectAsyncUnordered(int.MaxValue, l => logFileRptGeneratorService.GetCheckInforInUseOuts(l, viewModel.LogFiles));
 

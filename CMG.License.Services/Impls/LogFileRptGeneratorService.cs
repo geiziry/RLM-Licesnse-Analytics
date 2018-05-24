@@ -5,7 +5,6 @@ using Akka.Util;
 using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,8 +54,6 @@ namespace CMG.License.Services.Impls
                 }), actorSystem.Materializer());
             return withoutCheckin;
         }
-
-
 
         private Task<LogRptDto> GetLogRptDto(CheckOutDto checkOut, LogFile logFile)
         {
