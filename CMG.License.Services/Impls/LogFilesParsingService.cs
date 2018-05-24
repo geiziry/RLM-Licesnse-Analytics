@@ -27,7 +27,7 @@ namespace CMG.License.Services.Impls
             logFile.ParseStart(startLine);
             logFile.InitializeProgress(lines);
             await Source.From(lines)
-                .SelectAsyncUnordered(30, logFile.ParseLine)
+                .SelectAsyncUnordered(int.MaxValue, logFile.ParseLine)
                 .RunWith(Sink.Ignore<bool>(), actorSystem.Materializer());
             return logFile;
         }

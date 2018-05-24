@@ -84,7 +84,7 @@ namespace CMG.License.UI.ViewModels
 
         private void GenerateReport()
         {
-            OpenLogFileCoordinatorActor.Tell("Start");
+            OpenLogFileCoordinatorActor.Tell("start");
         }
 
         //TODO: specify the generated Excel file name and path

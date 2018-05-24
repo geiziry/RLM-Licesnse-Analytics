@@ -86,18 +86,17 @@ namespace CMG.License.Services.Impls
              });
         }
 
-        public Task<bool> GetCheckInforInUseOuts(LogRptDto logRptDto, IEnumerable<LogFile> logFiles)
+        public Task<Tuple<bool,LogRptDto>> GetCheckInforInUseOuts(LogRptDto logRptDto, IEnumerable<LogFile> logFiles)
         {
             IOrderedEnumerable<LogFile> logFilesToCheck = from l in logFiles
-                                                          where l.StartEvent.TimeStamp >= logRptDto.OutTime
+                                                          where l.EndEvent.TimeStamp >= logRptDto.OutTime
                                                           orderby l.StartEvent.TimeStamp
                                                           select l;
 
             if (logFilesToCheck.Any())
             {
                 var firstLogFileWithShutdown = (from l in logFiles
-                                                where l.Shutdowns.Any()
-                                                && l.StartEvent.TimeStamp >= logRptDto.OutTime
+                                                where l.Shutdowns.Any(x=>x.TimeStamp>=logRptDto.OutTime)
                                                 orderby l.StartEvent.TimeStamp
                                                 select l).FirstOrDefault();
 
@@ -114,12 +113,13 @@ namespace CMG.License.Services.Impls
                         {
                             var InTime = CheckInTimeProcessingService.GetCheckInTime(logRptDto, logFile);
                             if (SetCheckInTime(InTime, logRptDto))
-                                return Task.Run(() => true);
+                                return Task.Run(() => Tuple.Create(true,logRptDto));
                         }
 
-                        var firstShutdown = firstLogFileWithShutdown.Shutdowns.FirstOrDefault();
+                        var firstShutdown = firstLogFileWithShutdown.Shutdowns.OrderBy(x=>x.TimeStamp)
+                                                                              .FirstOrDefault(x=>x.TimeStamp>logRptDto.OutTime);
                         if (SetCheckInTime(firstShutdown.TimeStamp, logRptDto))
-                            return Task.Run(() => true);
+                            return Task.Run(() => Tuple.Create(true, logRptDto));
                     }
                 }
                 else
@@ -128,12 +128,12 @@ namespace CMG.License.Services.Impls
                     {
                         var InTime = CheckInTimeProcessingService.GetCheckInTime(logRptDto, logFile);
                         if (SetCheckInTime(InTime, logRptDto))
-                            return Task.Run(() => true);
+                            return Task.Run(() => Tuple.Create(true, logRptDto));
                     }
                 }
             }
 
-            return Task.Run(() => false);
+            return Task.Run(() => Tuple.Create(false, logRptDto));
         }
 
         private bool SetCheckInTime(DateTime InTime, LogRptDto logRptDto)

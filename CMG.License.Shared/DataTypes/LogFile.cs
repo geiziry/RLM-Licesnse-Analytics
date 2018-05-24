@@ -51,6 +51,7 @@ namespace CMG.License.Shared.DataTypes
         public string RawText { get; set; }
         public ConcurrentSet<ShutdownDto> Shutdowns { get; set; }
         public StartDto StartEvent { get; set; }
+        public EndDto EndEvent { get; set; }
 
         public bool Exists()
         {
@@ -91,6 +92,8 @@ namespace CMG.License.Shared.DataTypes
 
                         case LogEvents.SHUTDOWN:
                             return Shutdowns.TryAdd(ParseShutdown(tokens));
+                        case LogEvents.END:
+                            return ParseEnd(tokens);
 
                         default:
                             return false;
@@ -112,6 +115,15 @@ namespace CMG.License.Shared.DataTypes
                                  .GetFormattedDateTime("MM/dd/yyyy HH:mm:ss");
             }
             StartEvent = start;
+        }
+
+        private bool ParseEnd(List<string> tokens)
+        {
+            EndEvent = new EndDto
+            {
+                TimeStamp = $"{tokens[End.date]} {tokens[End.time]}".GetFormattedDateTime("MM/dd/yyyy HH:mm:ss")
+            };
+            return true;
         }
 
         private static List<string> GetTokens(string line)

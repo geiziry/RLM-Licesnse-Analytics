@@ -5,7 +5,6 @@ using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table.PivotTable;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace CMG.License.Services.Impls

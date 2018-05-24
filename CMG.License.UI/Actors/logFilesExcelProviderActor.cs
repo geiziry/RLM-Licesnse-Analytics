@@ -18,7 +18,7 @@ namespace CMG.License.UI.Actors
         private static void GenerateXlsFile(ILogFilesExcelProviderService logFilesExcelProviderService, List<LogRptDto> reportRows)
         {
             const string excelRptFilePath = @"C:\Users\mgeiziry\Desktop\test.xlsx";
-            //TODO: continue on formatting the pivot chart
+
             var xlsFileInfo = new FileInfo(excelRptFilePath);
             if (xlsFileInfo.Exists)
                 xlsFileInfo.Delete();
@@ -30,6 +30,7 @@ namespace CMG.License.UI.Actors
 
                 xlsFile.Save();
             }
+            Context.Parent.Tell("done");
         }
     }
 }
