@@ -28,7 +28,7 @@ namespace CMG.License.Services.Impls
     public class LogFileRptGeneratorService : ILogFileRptGeneratorService
     {
         private ConcurrentDictionary<string, LogRptDto> InUseCheckOuts;
-        private List<LogRptDto> report;
+        private ConcurrentSet<LogRptDto> report;
 
         private readonly IActorRefFactory actorSystem;
 
@@ -40,7 +40,7 @@ namespace CMG.License.Services.Impls
         public void InitializeReport()
         {
             InUseCheckOuts = new ConcurrentDictionary<string, LogRptDto>();
-            report = new List<LogRptDto>();
+            report = new ConcurrentSet<LogRptDto>();
         }
 
         public async Task<ConcurrentSet<LogRptDto>> GenerateReport(LogFile logFile)
@@ -50,7 +50,7 @@ namespace CMG.License.Services.Impls
             var withoutCheckin = new ConcurrentSet<LogRptDto>();
             await source
                 .Via(getLogRptDto)
-                .RunWith(Sink.ForEachParallel<LogRptDto>(20, l =>
+                .RunWith(Sink.ForEachParallel<LogRptDto>(int.MaxValue,l =>
                 {
                     if (!string.IsNullOrEmpty(l.ServerHandle))
                         withoutCheckin.TryAdd(l);
@@ -78,7 +78,7 @@ namespace CMG.License.Services.Impls
                  };
                  if (logRptDto.InTime > DateTime.MinValue)
                  {
-                     report.Add(logRptDto);
+                     report.TryAdd(logRptDto);
                      return new LogRptDto();
                  }
                  else
@@ -141,13 +141,13 @@ namespace CMG.License.Services.Impls
             if (InTime != default(DateTime))
             {
                 logRptDto.InTime = InTime;
-                report.Add(logRptDto);
+                report.TryAdd(logRptDto);
                 return true;
             }
             return false;
         }
 
-        public List<LogRptDto> GetReportRows()
+        public ConcurrentSet<LogRptDto> GetReportRows()
         {
             return report;
         }

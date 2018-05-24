@@ -12,7 +12,7 @@ namespace CMG.License.Services.Interfaces
 
         Task<Tuple<bool, LogRptDto>> GetCheckInforInUseOuts(LogRptDto logRptDto,IEnumerable<LogFile> logFiles);
 
-        List<LogRptDto> GetReportRows();
+        ConcurrentSet<LogRptDto> GetReportRows();
 
         void InitializeReport();
     }

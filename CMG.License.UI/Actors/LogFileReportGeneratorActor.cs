@@ -46,13 +46,15 @@ namespace CMG.License.UI.Actors
 
                 var sink = Sink.ActorRef<Tuple<bool, LogRptDto>>(logFilesExcelProviderActor, logFileRptGeneratorService.GetReportRows());
 
+                //var sink = Sink.First<Tuple<bool, LogRptDto>>();
+
                 var parsing = Flow.Create<LogFile>()
                                 .SelectAsyncUnordered(int.MaxValue, logFilesParsingService.ParseLogFileEventsAsync);
                 
                 var reportGen = Flow.Create<LogFile>()
                                 .SelectAsyncUnordered(int.MaxValue, logFileRptGeneratorService.GenerateReport)
                                 .SelectMany(x => x);
-                
+
                 var getCheckIns = Flow.Create<LogRptDto>()
                                 .SelectAsyncUnordered(int.MaxValue, l => logFileRptGeneratorService.GetCheckInforInUseOuts(l, viewModel.LogFiles));
 
@@ -61,8 +63,8 @@ namespace CMG.License.UI.Actors
                 return ClosedShape.Instance;
             }));
 
-            g.Run(Context.Materializer());
-
+            var t=g.Run(Context.Materializer());
+            
             //await source
             //    .Via(parsing)
             //    .Via(reportGen)

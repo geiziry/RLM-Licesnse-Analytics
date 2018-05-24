@@ -1,10 +1,12 @@
-﻿using CMG.License.Services.Interfaces;
+﻿using Akka.Util;
+using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
 using CMG.License.Shared.Helpers;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table.PivotTable;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CMG.License.Services.Impls
@@ -16,8 +18,9 @@ namespace CMG.License.Services.Impls
             throw new System.NotImplementedException();
         }
 
-        public void GenerateRawDataSheet(List<LogRptDto> ReportRows, ExcelPackage xlsFile)
+        public void GenerateRawDataSheet(ConcurrentSet<LogRptDto> ReportRows, ExcelPackage xlsFile)
         {
+            Debug.Print($"Report Rows Count ===>[{ReportRows.Count}]");
             var rowDataSheet = xlsFile.Workbook.Worksheets.Add("Raw Data");
             var dataRange = rowDataSheet.Cells["A1"].LoadFromCollectionFiltered(
                 from r in ReportRows

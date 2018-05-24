@@ -35,13 +35,16 @@ namespace CMG.License.Shared.DataTypes
         public ConcurrentSet<CheckInDto> CheckIns { get; set; }
         public ConcurrentSet<CheckOutDto> CheckOuts { get; set; }
         public ConcurrentSet<DenyDto> Denys { get; set; }
+        public EndDto EndEvent { get; set; }
         public int Id { get; set; }
+
         public DelegateCommand OpenFileCmd
                     => openFileCmd ?? (openFileCmd = new DelegateCommand(() => Process.Start("notepad.exe", Path),
                     () => !string.IsNullOrEmpty(Path)));
 
         public string Path { get { return filePath; } }
         public ConcurrentSet<ProductDto> Products { get; set; }
+
         public double ProgressInt
         {
             get { return progressInt; }
@@ -51,8 +54,6 @@ namespace CMG.License.Shared.DataTypes
         public string RawText { get; set; }
         public ConcurrentSet<ShutdownDto> Shutdowns { get; set; }
         public StartDto StartEvent { get; set; }
-        public EndDto EndEvent { get; set; }
-
         public bool Exists()
         {
             return File.Exists(filePath);
@@ -92,8 +93,12 @@ namespace CMG.License.Shared.DataTypes
 
                         case LogEvents.SHUTDOWN:
                             return Shutdowns.TryAdd(ParseShutdown(tokens));
+
                         case LogEvents.END:
                             return ParseEnd(tokens);
+
+                        //case LogEvents.START:
+                        //    return ParseStart(tokens);
 
                         default:
                             return false;
@@ -104,7 +109,18 @@ namespace CMG.License.Shared.DataTypes
             });
         }
 
-        public void ParseStart(string startLine)
+        //public bool ParseStart(List<string> tokens)
+        //{
+        //    StartEvent = new StartDto
+        //    {
+        //        ServerName = tokens[Start.server_name],
+        //        TimeStamp = $"{tokens[Start.date]} {tokens[Start.time]}"
+        //                         .GetFormattedDateTime("MM/dd/yyyy HH:mm:ss")
+        //    };
+        //    return true;
+        //}
+
+        public bool ParseStart(string startLine)
         {
             var tokens = GetTokens(startLine);
             var start = new StartDto();
@@ -115,14 +131,6 @@ namespace CMG.License.Shared.DataTypes
                                  .GetFormattedDateTime("MM/dd/yyyy HH:mm:ss");
             }
             StartEvent = start;
-        }
-
-        private bool ParseEnd(List<string> tokens)
-        {
-            EndEvent = new EndDto
-            {
-                TimeStamp = $"{tokens[End.date]} {tokens[End.time]}".GetFormattedDateTime("MM/dd/yyyy HH:mm:ss")
-            };
             return true;
         }
 
@@ -174,6 +182,14 @@ namespace CMG.License.Shared.DataTypes
                                                 .GetFormattedDateTime("yyyy/MM/dd HH:mm")
         };
 
+        private bool ParseEnd(List<string> tokens)
+        {
+            EndEvent = new EndDto
+            {
+                TimeStamp = $"{tokens[End.date]} {tokens[End.time]}".GetFormattedDateTime("MM/dd/yyyy HH:mm:ss")
+            };
+            return true;
+        }
         private ProductDto ParseProduct(List<string> tokens) => new ProductDto
         {
             Name = tokens[Product.name],
@@ -185,6 +201,7 @@ namespace CMG.License.Shared.DataTypes
             TimeStamp = $"{StartEvent.TimeStamp.Year}/{tokens[Shutdown.mm_dd]} {tokens[Shutdown.time]}"
                                                             .GetFormattedDateTime("yyyy/MM/dd HH:mm:ss")
         };
+
         #endregion Parsing
     }
 }

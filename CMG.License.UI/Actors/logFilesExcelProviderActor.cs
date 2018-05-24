@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Util;
 using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
 using OfficeOpenXml;
@@ -11,11 +12,11 @@ namespace CMG.License.UI.Actors
     {
         public LogFilesExcelProviderActor(ILogFilesExcelProviderService logFilesExcelProviderService)
         {
-            Receive<List<LogRptDto>>(reportRows =>
+            Receive<ConcurrentSet<LogRptDto>>(reportRows =>
                     GenerateXlsFile(logFilesExcelProviderService, reportRows));
         }
 
-        private static void GenerateXlsFile(ILogFilesExcelProviderService logFilesExcelProviderService, List<LogRptDto> reportRows)
+        private static void GenerateXlsFile(ILogFilesExcelProviderService logFilesExcelProviderService, ConcurrentSet<LogRptDto> reportRows)
         {
             const string excelRptFilePath = @"C:\Users\mgeiziry\Desktop\test.xlsx";
 
