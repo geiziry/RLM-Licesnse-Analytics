@@ -3,6 +3,7 @@ using Akka.Streams;
 using Akka.Streams.Dsl;
 using CMG.License.Services.Interfaces;
 using CMG.License.Shared.DataTypes;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,10 +31,10 @@ namespace CMG.License.Services.Impls
 
             logFile.ParseStart(startLine);
             logFile.InitializeProgress(lines);
-
+            var t = new List<bool>();
             await Source.From(lines)
                 .SelectAsyncUnordered(int.MaxValue, logFile.ParseLine)
-                .RunWith(Sink.Ignore<bool>(), actorSystem.Materializer());
+                .RunWith(Sink.ForEach<bool>(x=>t.Add(x)), actorSystem.Materializer());
             return logFile;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMG.License.Shared.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CMG.License.Services.Interfaces
 {
     public interface IDenialsRptGeneratorService
     {
-        
+       void Aggregate(LogFile logFile);
     }
 }

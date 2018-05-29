@@ -7,5 +7,6 @@
         public static readonly ActorMetaData LogFileReportGeneratorActor = new ActorMetaData("LogFileReportGeneratorActor", OpenLogFileCoordinatorActor);
         public static readonly ActorMetaData LogFilesParsingActor = new ActorMetaData("LogFilesParsingActor", LogFileReportGeneratorActor);
         public static readonly ActorMetaData logFilesExcelProviderActor = new ActorMetaData("logFilesExcelProviderActor", LogFileReportGeneratorActor);
+        public static readonly ActorMetaData getCheckInsActor = new ActorMetaData("getCheckInsActor", LogFileReportGeneratorActor);
     }
 }
