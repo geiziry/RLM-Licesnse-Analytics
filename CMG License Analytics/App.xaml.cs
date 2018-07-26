@@ -73,6 +73,7 @@ namespace CMG_License_Analytics
             }
         }
 
+
         /// <summary>
         /// Invoked when Navigation to a certain page fails
         /// </summary>
