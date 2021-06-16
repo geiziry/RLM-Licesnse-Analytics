@@ -1,5 +1,3 @@
-﻿<Application
-    x:Class="CMG_License_Analytics.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Application x:Class="CMG.License.Analytics.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources></Application.Resources>
 </Application>
